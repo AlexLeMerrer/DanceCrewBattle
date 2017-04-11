@@ -103,4 +103,13 @@ public class InfluenceCircle : MonoBehaviour {
         spotlight.transform.position.Set(spotlight.transform.position.x, spotlight.transform.position.y,circleActualGrow / 2);
     }
     #endregion
+    
+
+    void OnTriggerEnter2D(Collider2D coll)
+    {
+        if(coll.gameObject.tag == "Character")
+        {
+            coll.GetComponent<Renderer>().material.color = Color.red;
+        }
+    }
 }

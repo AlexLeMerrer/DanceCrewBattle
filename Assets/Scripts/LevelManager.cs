@@ -11,7 +11,6 @@ public class LevelManager : MonoBehaviour {
     private List<GameObject> neutralPerson = new List<GameObject>();
     private List<GameObject> dancingPerson = new List<GameObject>();
 
-    private float timer = 3.0f;
     private bool isContaminated = false;
 
     void Awake()
@@ -33,20 +32,34 @@ public class LevelManager : MonoBehaviour {
             
         }
 	}
+
+    public Vector3 SearchForSomeoneNear(GameObject neutralChar)
+    {
+        float distance = 100000000000.0f;
+        for (int i = 0; i < neutralPerson.Count; i++)
+        {
+            float newDistance = Vector3.Distance(neutralChar.transform.position, neutralPerson[i].transform.position);
+            if (newDistance < distance) distance = newDistance;
+        }
+
+        for (int i = 0; i < neutralPerson.Count; i++)
+        {
+            if (distance == Vector3.Distance(neutralChar.transform.position, neutralPerson[i].transform.position)) return neutralPerson[i].transform.position;
+        }
+
+        return neutralChar.transform.position;
+
+
+    }
+
+    public void RemoveFromTab(GameObject neutralChar)
+    {
+        neutralPerson.Remove(neutralChar);
+    }
 	
 	// Update is called once per frame
 	void Update () {
-        if(!isContaminated)
-        {
-            timer -= Time.deltaTime;
-            if (timer < 0)
-            {
-                ContaminationTimer();
-                isContaminated = true;
-            }
-        }
         
-
         
 	}
 
@@ -59,17 +72,12 @@ public class LevelManager : MonoBehaviour {
         neutralPerson.Remove(neutralPerson[randomChar]);
     }
 
-    public void ContamineAnotherGuy(Vector3 targetPos)
+    public void ContaminateAnotherGuy(GameObject danseur)
     {
         for (int i = 0; i < neutralPerson.Count; i++)
         {
-            if(neutralPerson[i].transform.position == targetPos)
-            {
-                int randomTarget = Random.Range(0, neutralPerson.Count);
-                neutralPerson[i].GetComponent<NeutralCharacter>().SetModeSearchForSomeone();
-                neutralPerson[i].GetComponent<NeutralCharacter>().targetPos = neutralPerson[randomTarget].transform.position;
-                neutralPerson.Remove(neutralPerson[i]);
-            }
+            if (neutralPerson[i].transform.position == SearchForSomeoneNear(danseur)) neutralPerson[i].GetComponent<NeutralCharacter>().SetModeSearchForSomeone();
         }
     }
+
 }

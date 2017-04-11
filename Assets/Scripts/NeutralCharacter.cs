@@ -36,9 +36,8 @@ public class NeutralCharacter : MonoBehaviour {
 
     private void DoActionSearch()
     {
-        GetComponent<Renderer>().material.color = Color.red;
-
-        Vector3 targetBeforePos = new Vector3(targetPos.x - 1.0f, targetPos.y,targetPos.z);
+        LevelManager.manager.RemoveFromTab(gameObject);
+        Vector3 targetBeforePos = new Vector3(LevelManager.manager.SearchForSomeoneNear(gameObject).x - 1.0f, LevelManager.manager.SearchForSomeoneNear(gameObject).y - 1.0f,LevelManager.manager.SearchForSomeoneNear(gameObject).z);
 
         transform.position = Vector3.MoveTowards(transform.position, targetBeforePos, 10.0f * Time.deltaTime);
 
@@ -49,12 +48,17 @@ public class NeutralCharacter : MonoBehaviour {
     private void DoActionDance()
     {
         GetComponent<Renderer>().material.color = Color.blue;
-        LevelManager.manager.ContamineAnotherGuy(targetPos);
+        LevelManager.manager.ContaminateAnotherGuy(gameObject);
     }
 
     private void DoActionVoid()
     {
 
+    }
+
+    void OnTriggerEnter2D(Collider2D coll)
+    {
+        SetModeSearchForSomeone();
     }
 
 

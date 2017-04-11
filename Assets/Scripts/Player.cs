@@ -31,7 +31,6 @@ public class Player : MonoBehaviour {
     {
         Move();
         GrowInfluence();
-        Debug.Log(Input.GetAxis("Horizontal"));
     }
 
     private void Move()
