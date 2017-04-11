@@ -47,7 +47,7 @@ public class LevelManager : MonoBehaviour {
             if (distance == Vector3.Distance(neutralChar.transform.position, neutralPerson[i].transform.position)) return neutralPerson[i].transform.position;
         }
 
-        return neutralChar.transform.position;
+        return neutralPerson[0].transform.position;
 
 
     }
@@ -74,9 +74,10 @@ public class LevelManager : MonoBehaviour {
 
     public void ContaminateAnotherGuy(GameObject danseur)
     {
+        Vector3 nearDanseur = SearchForSomeoneNear(danseur);
         for (int i = 0; i < neutralPerson.Count; i++)
         {
-            if (neutralPerson[i].transform.position == SearchForSomeoneNear(danseur)) neutralPerson[i].GetComponent<NeutralCharacter>().SetModeSearchForSomeone();
+            if (neutralPerson[i].transform.position == nearDanseur) neutralPerson[i].GetComponent<NeutralCharacter>().SetModeSearchForSomeone();
         }
     }
 

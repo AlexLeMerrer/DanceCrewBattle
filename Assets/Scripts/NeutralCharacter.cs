@@ -48,7 +48,7 @@ public class NeutralCharacter : MonoBehaviour {
     private void DoActionDance()
     {
         GetComponent<Renderer>().material.color = Color.blue;
-        LevelManager.manager.ContaminateAnotherGuy(gameObject);
+        //LevelManager.manager.ContaminateAnotherGuy(gameObject);
     }
 
     private void DoActionVoid()
