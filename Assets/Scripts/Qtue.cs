@@ -2,18 +2,26 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 public class Qtue : MonoBehaviour {
 
+    
     private GameObject perfect;
+    public string currentPlayer;
+    private float normalWidth = 50.0f;
+    private float perfectWidth = 20.0f;
+    private float scaleNumber = 1.0f;
     private RectTransform rectTransform;
     private float startTime;
-    public float speed = 2.0f;
+    public float speed = 5.0f;
     // Use this for initialization
     void Start () {
         perfect = gameObject.transform.parent.FindChild("Perfect").gameObject;
         rectTransform = gameObject.GetComponent<RectTransform>();
+        
     }
+
 	
 	// Update is called once per frame
 	void Update () {
@@ -24,10 +32,29 @@ public class Qtue : MonoBehaviour {
     {
 
         rectTransform.transform.localPosition += Vector3.down * speed;
-        if (rectTransform.transform.localPosition.y < perfect.GetComponent<RectTransform>().transform.localPosition.y - 150)
+        
+        if (rectTransform.transform.localPosition.y <= perfect.GetComponent<RectTransform>().transform.localPosition.y + perfectWidth
+            && rectTransform.transform.localPosition.y >= perfect.GetComponent<RectTransform>().transform.localPosition.y - perfectWidth
+            && Input.GetButtonDown(rectTransform.gameObject.tag))    
         {
-            //UIManager.InputReaction(gameObject.transform.parent.gameObject, "Miss !");
+            Destroy(gameObject);
+            scaleNumber = 2.0f;
+            QTUEManager.instance.InvokeScale(scaleNumber, gameObject.transform.parent.gameObject);
+        }
+        else if (rectTransform.transform.localPosition.y <= perfect.GetComponent<RectTransform>().transform.localPosition.y + normalWidth
+            && rectTransform.transform.localPosition.y >= perfect.GetComponent<RectTransform>().transform.localPosition.y - normalWidth
+            && Input.GetButtonDown(rectTransform.gameObject.tag))
+        {
+            Destroy(gameObject);
+            scaleNumber = 1.0f;
+            QTUEManager.instance.InvokeScale(scaleNumber, gameObject.transform.parent.gameObject);
+
+        }
+        else if (rectTransform.transform.localPosition.y < perfect.GetComponent<RectTransform>().transform.localPosition.y - 150)
+        {
             Destroy(gameObject, .1f);
+            scaleNumber = 0.5f;
+            QTUEManager.instance.InvokeScale(scaleNumber, gameObject.transform.parent.gameObject);
         }
     }
 }

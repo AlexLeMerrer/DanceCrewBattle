@@ -11,11 +11,16 @@ public class UIManager : MonoBehaviour {
     public static Text Text2;
     public float speed;
     private List<GameObject> waitingInput;
+    public RectTransform[] textName;
     private int counter = 0;
     private GameObject next;
-	// Use this for initialization
-	void Start () {
+
+    private static UIManager m_Manager;
+    public static UIManager manager { get { return m_Manager; } }
+    // Use this for initialization
+    void Start () {
         waitingInput = new List<GameObject>();
+        m_Manager = this;
 	}
 	
 	// Update is called once per frame
@@ -24,6 +29,7 @@ public class UIManager : MonoBehaviour {
         {
             foreach (var lQtue in Qtues)
             {
+                
                 next = GameObject.Instantiate(controls[Random.Range(0,controls.Length)]);
                 next.AddComponent<Qtue>();
                 next.transform.SetParent(lQtue.transform);
@@ -45,5 +51,13 @@ public class UIManager : MonoBehaviour {
         }
         lText.gameObject.SetActive(true);
         lText.text = pReaction;
+    }
+
+    public void ActiveText(string TextName)
+    {
+        for (int i = 0; i < textName.Length; i++)
+        {
+            if (textName[i].name == TextName) textName[i].gameObject.SetActive(true);
+        }
     }
 }

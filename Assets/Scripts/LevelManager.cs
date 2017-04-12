@@ -19,7 +19,7 @@ public class LevelManager : MonoBehaviour {
     }
 	// Use this for initialization
 	void Start () {
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 20; i++)
         {
             Vector3 stageDimensions = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 0));
             float randomX = Random.Range(-stageDimensions.x, stageDimensions.x);
