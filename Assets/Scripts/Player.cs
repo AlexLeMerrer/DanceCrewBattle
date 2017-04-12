@@ -6,7 +6,8 @@ using GAF.Core;
 public class Player : MonoBehaviour {
 
     public delegate void State();
-    public State behaviour;
+    public State MoveBehavior;
+    public State DanceBehavior;
 
     private static Player Player1;
     private static Player Player2;
@@ -16,8 +17,12 @@ public class Player : MonoBehaviour {
     public float velocity = 3;
     public float gainInfluence = 1f;
     public InfluenceCircle influenceAsset;
-    public GAFMovieClip animationAsset;
-    
+    private GameObject animationAsset;
+    private GAFMovieClip animation;
+    private bool isDancing;
+
+    public GameObject[] assetList;
+
     // TO MOVE
     private float topLimit;
     private float bottomLimit;
@@ -28,57 +33,102 @@ public class Player : MonoBehaviour {
 
     void Awake()
     {
-        QTUEManager.instance.scalefactorP1.AddListener(scaleCircle);
     }
 
     void Start () {
+        GameObject animationAsset;
+        if (Player2 != null)
+        {
+            animationAsset = Instantiate(assetList[0]);
+            animationAsset.transform.position = transform.position;
+            Player1 = this;
+        }
+        else
+        {
+            animationAsset = Instantiate(assetList[1]);
+            animationAsset.transform.position = transform.position;
+            Player2 = this;
+        }
+        animationAsset.transform.SetParent(gameObject.transform);
+        animation = transform.GetChild(transform.childCount - 1).GetComponent<GAFMovieClip>();
 
-        if (Player2 != null)    Player1 = this;
-        else                    Player2 = this;
-        
         topLimit =      LevelManager.manager.GetComponent<RectTransform>().rect.height/2 - GetComponent<Renderer>().bounds.size.y;
         bottomLimit =   -LevelManager.manager.GetComponent<RectTransform>().rect.height / 2 + GetComponent<Renderer>().bounds.size.y;
         rightLimit =    LevelManager.manager.GetComponent<RectTransform>().rect.width / 2 - GetComponent<Renderer>().bounds.size.x;
         leftLimit =     -LevelManager.manager.GetComponent<RectTransform>().rect.width/2 + GetComponent<Renderer>().bounds.size.x;
 
-        setModeIdle();
 
         if (ControllerManager.instance != null && Player1 == this)
             ControllerManager.instance.onAxis1.AddListener(ControlMove);
         else if(ControllerManager.instance != null)
             ControllerManager.instance.onAxis2.AddListener(ControlMove);
+
+        setModeIdle();
+        if (QTUEManager.instance != null)
+        {
+            setModeDance();
+            QTUEManager.instance.scalefactorP1.AddListener(scaleCircle);
+        }
     }
 	
 	void Update ()
     {
-        CheckInfluence();
-        behaviour();
+        MoveBehavior();
+        DanceBehavior();
     }
 
     #region State Machine
         #region idle
         private void setModeIdle()
         {
-            behaviour = Idle;
-            //animationAsset.GetComponent<GAFMovieClip>().setSequence("idle", true);
+            MoveBehavior = Idle;
+            animation.setSequence("idle", true);
         }
         private void Idle()
         {
-            if (Input.GetAxis("Vertical") != 0 || Input.GetAxis("Horizontal") != 0)
-                setModeMove();
+            if (Player1 == this && (Input.GetAxis("P1_Horizontal") != 0 || Input.GetAxis("P1_Vertical") != 0) && !isDancing ||
+                Player2 == this && (Input.GetAxis("P2_Horizontal") != 0 || Input.GetAxis("P2_Vertical") != 0) && !isDancing) setModeMove();
         }
         #endregion
         #region Move
         private void setModeMove()
         {
-            behaviour = Move;
-            animationAsset.GetComponent<GAFMovieClip>().setSequence("move", true);
-
+            MoveBehavior = Move;
+            animation.setSequence("move", true);
         }
         private void Move()
-        {   
-            //if (Input.GetAxis("Vertical") == 0 || Input.GetAxis("Horizontal") == 0)
-            //  setModeIdle();
+        {
+            if (Player1 == this && (Input.GetAxis("P1_Horizontal") == 0 || Input.GetAxis("P1_Vertical") == 0) && IsAnimationEnd() && !isDancing ||
+                Player2 == this && (Input.GetAxis("P2_Horizontal") == 0 || Input.GetAxis("P2_Vertical") == 0) && IsAnimationEnd() && !isDancing) setModeIdle();
+
+        }
+        #endregion
+        #region idleDance
+        private void setModeIdleDance()
+        {
+            DanceBehavior = IdleDance;
+            if (Player1 == this && (Input.GetAxis("P1_Horizontal") != 0 || Input.GetAxis("P1_Vertical") != 0) ||
+                Player2 == this && (Input.GetAxis("P2_Horizontal") != 0 || Input.GetAxis("P2_Vertical") != 0))
+                animation.setSequence("move", true);
+            else
+                animation.setSequence("idle", true);
+            isDancing = false;
+        }
+        private void IdleDance()
+        {
+            
+        }
+        #endregion
+        #region Dance
+        private void setModeDance()
+        {
+            DanceBehavior = IdleDance;
+            animation.setSequence("dance", true);
+            isDancing = true;
+        }
+        private void Dance()
+        {
+
         }
         #endregion
     #endregion
@@ -92,12 +142,9 @@ public class Player : MonoBehaviour {
                                          newPos.z);
     }
 
-
-    // PROVISOIRE
-    private void CheckInfluence()
+    private bool IsAnimationEnd()
     {
-        if(Input.GetButtonDown("Fire1"))
-            influenceAsset.SetModeGrow(gainInfluence);
+        return animation.currentFrameNumber == animation.currentSequence.endFrame;
     }
 
     private void scaleCircle(float scaleFactor)

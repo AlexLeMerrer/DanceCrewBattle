@@ -35,8 +35,8 @@ public class InfluenceCircle : MonoBehaviour {
     {
         behaviour = GrowBehavior;
         isActive = true;
-        if (circleScale < 2)                circleScale = 2;
-        circleScale += addScale;
+        if (circleScale < 2 && addScale > 0) circleScale = 2;
+        else if (circleScale + addScale > 0) circleScale += addScale;
         circleActualGrow = transform.localScale.x;
     }
     private void GrowBehavior()
