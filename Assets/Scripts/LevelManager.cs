@@ -36,6 +36,8 @@ public class LevelManager : MonoBehaviour {
             neutralPerson.Add(go);
             
         }
+        MusicLoopsManager.manager.PlayMusic(MusicType.solveMusic);
+    }
 
         spawnPlayer();
         MusicLoopsManager.manager.PlayMusic(MusicType.menuMusic);
