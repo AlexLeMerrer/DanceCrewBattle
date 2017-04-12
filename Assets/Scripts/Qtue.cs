@@ -15,17 +15,24 @@ public class Qtue : MonoBehaviour {
     private RectTransform rectTransform;
     private float startTime;
     public float speed = 5.0f;
+    public bool isMoving = false;
     // Use this for initialization
     void Start () {
         perfect = gameObject.transform.parent.FindChild("Perfect").gameObject;
         rectTransform = gameObject.GetComponent<RectTransform>();
+        LevelManager.manager.onGameOver.AddListener(StopMove);
         
     }
 
 	
 	// Update is called once per frame
 	void Update () {
-        Move();
+        if(!isMoving) Move();
+    }
+
+    void StopMove()
+    {
+        isMoving = true;
     }
 
     private void Move()
