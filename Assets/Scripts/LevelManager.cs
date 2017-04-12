@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class LevelManager : MonoBehaviour {
 
@@ -17,10 +18,14 @@ public class LevelManager : MonoBehaviour {
     
     public GameObject spawnP1;
     public GameObject spawnP2;
+
+    public UnityEvent onGameOver;
     
     void Awake()
     {
         m_Manager = this;
+        onGameOver = new UnityEvent();
+        UIManager.manager.onGameOver.AddListener(DestroyAllThisShit);
     }
 	// Use this for initialization
 	void Start () {
@@ -38,8 +43,10 @@ public class LevelManager : MonoBehaviour {
             
         }
 
+    
+
         spawnPlayer();
-        MusicLoopsManager.manager.PlayMusic(MusicType.menuMusic);
+        //MusicLoopsManager.manager.PlayMusic(MusicType.menuMusic);
 
     }
 
@@ -60,7 +67,7 @@ public class LevelManager : MonoBehaviour {
         return nearestChar;
     }
 
-    public bool SomeoneTargetable()
+    public bool SomeoneTargetable(GameObject neutralChar)
     {
         foreach (var lChar in neutralPerson)
         {
@@ -69,9 +76,10 @@ public class LevelManager : MonoBehaviour {
         return false;
     }
 
-    public void RemoveFromTab(GameObject neutralChar)
+    public void NeutralToDancing(GameObject neutralChar)
     {
         neutralPerson.Remove(neutralChar);
+        dancingPerson.Add(neutralChar);
     }
 
     public int getNeutralLength()
@@ -107,5 +115,23 @@ public class LevelManager : MonoBehaviour {
     {
         GameObject Player1 = Instantiate(playerPrefab, spawnP1.transform.position, Quaternion.identity);
         GameObject Player2 = Instantiate(playerPrefab, spawnP2.transform.position, Quaternion.identity);
+    }
+
+    public void EndGame()
+    {
+        onGameOver.Invoke();
+    }
+   
+    private void DestroyAllThisShit()
+    {
+        for (int i = 0; i < neutralPerson.Count; i++)
+        {
+            Destroy(neutralPerson[i]);
+        }
+
+        for (int i = 0; i < dancingPerson.Count; i++)
+        {
+            Destroy(dancingPerson[i]);
+        }
     }
 }

@@ -18,6 +18,7 @@ public class NeutralCharacter : MonoBehaviour {
 
     void Awake()
     {
+        LevelManager.manager.onGameOver.AddListener(SetModeVoid);
         SetModeVoid();
     }
 
@@ -40,11 +41,11 @@ public class NeutralCharacter : MonoBehaviour {
     {
         isContamined = true;
         state = "contamined";
-        LevelManager.manager.RemoveFromTab(gameObject);
+        LevelManager.manager.NeutralToDancing(gameObject);
         if (LevelManager.manager.getNeutralLength() == 0) SetModeVoid();
         else
         {
-            if (!LevelManager.manager.SomeoneTargetable()) SetModeDance();
+            if (!LevelManager.manager.SomeoneTargetable(gameObject)) SetModeDance();
             else
             {
                 m_target = LevelManager.manager.SearchForSomeoneNear(gameObject);
@@ -68,16 +69,21 @@ public class NeutralCharacter : MonoBehaviour {
             if (deltaDist<1.0f)
             {
                 contamineCounter--;
-                m_target.GetComponent<NeutralCharacter>().SetModeSearchForSomeone();
+                RecruitNeutral();
                 if (contamineCounter == 0) SetModeDance();
                 else SetModeSearchForSomeone();
             }
         }
     }
 
+    public void RecruitNeutral()
+    {
+        m_target.GetComponent<NeutralCharacter>().setTeam(team);
+        m_target.GetComponent<NeutralCharacter>().SetModeSearchForSomeone();
+    }
+
     private void DoActionDance()
     {
-        gameObject.GetComponent<Renderer>().material.color = Color.blue;
         //LevelManager.manager.ContaminateAnotherGuy(gameObject);
     }
 
@@ -93,8 +99,19 @@ public class NeutralCharacter : MonoBehaviour {
 
     void OnTriggerEnter2D(Collider2D coll)
     {
-        if(!isContamined) SetModeSearchForSomeone();
+        if (!isContamined)
+        {
+            if (coll.gameObject.transform.parent.name.Contains("1")) setTeam("1");
+            else if (coll.gameObject.transform.parent.name.Contains("2")) setTeam("2");
+            SetModeSearchForSomeone();
+        }
     }
 
-
+    public void setTeam(string pTeam)
+    {
+        TeamManager.AddToTeam(pTeam, gameObject);
+        team = pTeam;
+        Debug.Log(pTeam);
+        gameObject.GetComponent<Renderer>().material.color = (pTeam =="2")?new Color(1,0.75f, 0.79f,0.5f):Color.blue;
+    }
 }
