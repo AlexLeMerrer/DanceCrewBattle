@@ -90,10 +90,7 @@ public class InfluenceCircle : MonoBehaviour {
 
     private void setScale(float pScale)
     {
-
-        transform.localScale = new Vector3(pScale,
-                                           pScale,
-                                           0    );
+        transform.localScale = new Vector3(pScale, pScale, 0);
     }
 
     private void lightBehavior()
