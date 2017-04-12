@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using GAF.Core;
 
 public class NeutralCharacter : MonoBehaviour {
 
@@ -11,14 +12,24 @@ public class NeutralCharacter : MonoBehaviour {
     public Vector3 targetPos;
     public bool isTargeted = false;
     private float m_speed = 1.0f;
-    public string team;
+    public string team = "";
     public bool isContamined = false;
     public string state = "neutral";
     private int contamineCounter = 2;
 
+    public GameObject[] assetList;
+    private GameObject animationAsset;
+    private GAFMovieClip animation;
+
     void Awake()
     {
-        LevelManager.manager.onGameOver.AddListener(SetModeVoid);
+        if(LevelManager.manager != null) LevelManager.manager.onGameOver.AddListener(SetModeVoid);
+        
+        animationAsset = Instantiate(assetList[Random.Range(0, assetList.Length)]);
+        animationAsset.transform.position = transform.position;
+        animationAsset.transform.SetParent(gameObject.transform);
+        animation = transform.GetChild(transform.childCount - 1).GetComponent<GAFMovieClip>();
+
         SetModeVoid();
     }
 
@@ -30,11 +41,13 @@ public class NeutralCharacter : MonoBehaviour {
     public void SetModeVoid()
     {
         DoAction = DoActionVoid;
+        animation.setSequence("idle", true);
     }
 
     public void SetModeDance()
     {
         DoAction = DoActionDance;
+        animation.setSequence("dance"+team, true);
     }
 
     public void SetModeSearchForSomeone()
@@ -58,7 +71,9 @@ public class NeutralCharacter : MonoBehaviour {
 
     private void DoActionSearch()
     {
-        if(m_target.GetComponent<NeutralCharacter>().state != "neutral")
+        animation.setSequence("move" + team, true);
+
+        if (m_target.GetComponent<NeutralCharacter>().state != "neutral")
         {
             SetModeSearchForSomeone();
         }
@@ -102,7 +117,7 @@ public class NeutralCharacter : MonoBehaviour {
         if (!isContamined)
         {
             if (coll.gameObject.transform.parent.name.Contains("1")) setTeam("1");
-            else if (coll.gameObject.transform.parent.name.Contains("2")) setTeam("2");
+            else setTeam("2");
             SetModeSearchForSomeone();
         }
     }
@@ -111,7 +126,6 @@ public class NeutralCharacter : MonoBehaviour {
     {
         TeamManager.AddToTeam(pTeam, gameObject);
         team = pTeam;
-        Debug.Log(pTeam);
-        gameObject.GetComponent<Renderer>().material.color = (pTeam =="2")?new Color(1,0.75f, 0.79f,0.5f):Color.blue;
+        //gameObject.GetComponent<Renderer>().material.color = (pTeam =="2")?new Color(1,0.75f, 0.79f,0.5f):Color.blue;
     }
 }

@@ -19,7 +19,7 @@ public class UIManager : MonoBehaviour
 
     public Text timerEnd;
 
-    public float timeStart = 30.0f;
+    public float timeStart = 60.0f;
     private float timeLeft;
 
     public Text time;

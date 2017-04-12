@@ -43,16 +43,6 @@ public class QTUEManager : MonoBehaviour
         scalefactorP2 = new ScaleEventP2();
     }
 
-    protected void Start()
-    {
-
-    }
-
-    protected void Update()
-    {
-
-    }
-
     protected void OnDestroy()
     {
         _instance = null;

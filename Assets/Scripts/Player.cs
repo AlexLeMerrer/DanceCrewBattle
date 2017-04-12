@@ -42,12 +42,14 @@ public class Player : MonoBehaviour {
             animationAsset = Instantiate(assetList[0]);
             animationAsset.transform.position = transform.position;
             Player1 = this;
+            name = "1";
         }
         else
         {
             animationAsset = Instantiate(assetList[1]);
             animationAsset.transform.position = transform.position;
             Player2 = this;
+            name = "2";
         }
         animationAsset.transform.SetParent(gameObject.transform);
         animation = transform.GetChild(transform.childCount - 1).GetComponent<GAFMovieClip>();
@@ -149,8 +151,8 @@ public class Player : MonoBehaviour {
 
     private void scaleCircle(float scaleFactor)
     {
-        if (Player1 == this) Debug.Log("Factor P_1" + scaleFactor);
-        if (Player2 == this) Debug.Log("Factor P_2" + scaleFactor);
+        //if (Player1 == this) Debug.Log("Factor P_1" + scaleFactor);
+        //if (Player2 == this) Debug.Log("Factor P_2" + scaleFactor);
         influenceAsset.SetModeGrow(scaleFactor);
     }
     
