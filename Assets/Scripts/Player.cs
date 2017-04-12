@@ -45,7 +45,7 @@ public class Player : MonoBehaviour {
 
         if (ControllerManager.instance != null && Player1 == this)
             ControllerManager.instance.onAxis1.AddListener(ControlMove);
-        else
+        else if(ControllerManager.instance != null)
             ControllerManager.instance.onAxis2.AddListener(ControlMove);
     }
 	
