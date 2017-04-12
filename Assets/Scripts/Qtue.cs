@@ -35,7 +35,7 @@ public class Qtue : MonoBehaviour {
         
         if (rectTransform.transform.localPosition.y <= perfect.GetComponent<RectTransform>().transform.localPosition.y + perfectWidth
             && rectTransform.transform.localPosition.y >= perfect.GetComponent<RectTransform>().transform.localPosition.y - perfectWidth
-            && Input.GetButtonDown(rectTransform.gameObject.tag))    
+            && Input.GetButtonDown(currentPlayer + gameObject.tag))    
         {
             Destroy(gameObject);
             scaleNumber = 2.0f;
@@ -43,8 +43,9 @@ public class Qtue : MonoBehaviour {
         }
         else if (rectTransform.transform.localPosition.y <= perfect.GetComponent<RectTransform>().transform.localPosition.y + normalWidth
             && rectTransform.transform.localPosition.y >= perfect.GetComponent<RectTransform>().transform.localPosition.y - normalWidth
-            && Input.GetButtonDown(rectTransform.gameObject.tag))
+            && Input.GetButtonDown(currentPlayer + gameObject.tag))
         {
+            Debug.Log("tg");
             Destroy(gameObject);
             scaleNumber = 1.0f;
             QTUEManager.instance.InvokeScale(scaleNumber, gameObject.transform.parent.gameObject);

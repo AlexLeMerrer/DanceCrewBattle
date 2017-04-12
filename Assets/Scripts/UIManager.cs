@@ -34,6 +34,8 @@ public class UIManager : MonoBehaviour {
                 next.AddComponent<Qtue>();
                 next.transform.SetParent(lQtue.transform);
                 next.transform.position = lQtue.transform.FindChild("Start").gameObject.transform.position;
+                if (next.gameObject.transform.parent.name == "QTE 1") next.GetComponent<Qtue>().currentPlayer = "P1_";
+                else if (next.gameObject.transform.parent.name == "QTE 2") next.GetComponent<Qtue>().currentPlayer = "P2_";
                 waitingInput.Add(next);
             }
             

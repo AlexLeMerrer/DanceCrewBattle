@@ -60,7 +60,6 @@ public class QTUEManager : MonoBehaviour
 
     public void InvokeScale(float scaleNumber,GameObject qteparent)
     {
-        Debug.Log("invoke");
         if(qteparent.name == "QTE 1") scalefactorP1.Invoke(scaleNumber);
         else if(qteparent.name == "QTE 2") scalefactorP2.Invoke(scaleNumber);
 
