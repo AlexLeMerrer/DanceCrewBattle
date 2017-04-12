@@ -19,7 +19,8 @@ public class UIManager : MonoBehaviour
 
     public Text timerEnd;
 
-    public float timeStart = 60.0f;
+    public float QteRate;
+    public float timeStart;
     private float timeLeft;
 
     public Text time;
@@ -51,7 +52,7 @@ public class UIManager : MonoBehaviour
     {
         if(!isGameOver)
         {
-            if (counter > 60 * 2)
+            if (counter > QteRate)
             {
                 foreach (var lQtue in Qtues)
                 {

@@ -13,9 +13,7 @@ public class Player : MonoBehaviour {
     private static Player Player2;
 
     //Liste des joueurs
-    //public static List<Player> list = new List<Player>();
-    public float velocity = 3;
-    public float gainInfluence = 1f;
+    public float velocity;
     public InfluenceCircle influenceAsset;
     private GameObject animationAsset;
     private GAFMovieClip animation;
@@ -37,21 +35,22 @@ public class Player : MonoBehaviour {
 
     void Start () {
         GameObject animationAsset;
-        if (Player2 != null)
+
+        if (name == "1")
         {
-            animationAsset = Instantiate(assetList[0]);
-            animationAsset.transform.position = transform.position;
             Player1 = this;
-            name = "1";
+            animationAsset = Instantiate(assetList[0]);
         }
         else
         {
-            animationAsset = Instantiate(assetList[1]);
-            animationAsset.transform.position = transform.position;
             Player2 = this;
-            name = "2";
+            animationAsset = Instantiate(assetList[1]);
         }
+        
+
+        animationAsset.transform.position = transform.position;
         animationAsset.transform.SetParent(gameObject.transform);
+
         animation = transform.GetChild(transform.childCount - 1).GetComponent<GAFMovieClip>();
 
         topLimit =      LevelManager.manager.GetComponent<RectTransform>().rect.height/2;
@@ -66,10 +65,17 @@ public class Player : MonoBehaviour {
             ControllerManager.instance.onAxis2.AddListener(ControlMove);
 
         setModeIdle();
-        if (QTUEManager.instance != null)
+        setModeIdleDance();
+
+        if (QTUEManager.instance != null && Player1 == this)
         {
             setModeDance();
             QTUEManager.instance.scalefactorP1.AddListener(scaleCircle);
+        }
+        if (QTUEManager.instance != null && Player1 == this)
+        {
+            setModeDance();
+            QTUEManager.instance.scalefactorP2.AddListener(scaleCircle);
         }
     }
 	
@@ -151,8 +157,7 @@ public class Player : MonoBehaviour {
 
     private void scaleCircle(float scaleFactor)
     {
-        //if (Player1 == this) Debug.Log("Factor P_1" + scaleFactor);
-        //if (Player2 == this) Debug.Log("Factor P_2" + scaleFactor);
+        Debug.Log("Factor " +name +" / "+ scaleFactor);
         influenceAsset.SetModeGrow(scaleFactor);
     }
     

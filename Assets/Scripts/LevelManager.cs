@@ -115,6 +115,8 @@ public class LevelManager : MonoBehaviour {
     {
         GameObject Player1 = Instantiate(playerPrefab, spawnP1.transform.position, Quaternion.identity);
         GameObject Player2 = Instantiate(playerPrefab, spawnP2.transform.position, Quaternion.identity);
+        Player1.name = "1";
+        Player2.name = "2";
     }
 
     public void EndGame()

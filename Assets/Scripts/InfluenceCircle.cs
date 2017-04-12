@@ -11,8 +11,8 @@ public class InfluenceCircle : MonoBehaviour {
 
     public float startCircleScale;
     public float maxCircleScale;
-    public float circleGrowSpeed = .25f;
-    public float circleReduceSpeed = 1f;
+    public float circleGrowSpeed;
+    public float circleReduceSpeed;
 
     [SerializeField]
     public GameObject spotlight;
@@ -22,6 +22,7 @@ public class InfluenceCircle : MonoBehaviour {
     
     void Start () {
         startCircleScale = circleScale;
+        setScale(startCircleScale);
     }
 	
 	void Update () {
@@ -35,8 +36,9 @@ public class InfluenceCircle : MonoBehaviour {
     {
         behaviour = GrowBehavior;
         isActive = true;
-        if (circleScale < 2 && addScale > 0) circleScale = 2;
-        else if (circleScale + addScale > 0) circleScale += addScale;
+        //if (circleScale < 2 && addScale > 0) circleScale = 2;
+        //else if (circleScale + addScale > 1) circleScale += addScale;
+        if(circleScale < maxCircleScale) circleScale += addScale;
         circleActualGrow = transform.localScale.x;
     }
     private void GrowBehavior()
@@ -95,15 +97,9 @@ public class InfluenceCircle : MonoBehaviour {
 
     private void lightBehavior()
     {
-        spotlight.GetComponent<Light>().spotAngle = circleActualGrow*10f;
-        spotlight.GetComponent<Light>().intensity = circleActualGrow/5;
-        spotlight.transform.position.Set(spotlight.transform.position.x, spotlight.transform.position.y,circleActualGrow / 2);
+        //spotlight.GetComponent<Light>().spotAngle = circleActualGrow*10f;
+        //spotlight.GetComponent<Light>().intensity = circleActualGrow/5;
+        spotlight.transform.position.Set(spotlight.transform.position.x, spotlight.transform.position.y,circleActualGrow /10);
     }
     #endregion
-    
-
-    void OnTriggerEnter2D(Collider2D coll)
-    {
-
-    }
 }

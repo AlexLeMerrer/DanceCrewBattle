@@ -42,12 +42,15 @@ public class NeutralCharacter : MonoBehaviour {
     {
         DoAction = DoActionVoid;
         animation.setSequence("idle", true);
+        animation.gotoAndPlay((uint)Random.Range(animation.currentSequence.startFrame, animation.currentSequence.endFrame));
     }
 
     public void SetModeDance()
     {
         DoAction = DoActionDance;
         animation.setSequence("dance"+team, true);
+        animation.gotoAndPlay((uint)Random.Range(animation.currentSequence.startFrame, animation.currentSequence.endFrame));
+
     }
 
     public void SetModeSearchForSomeone()

@@ -14,7 +14,7 @@ public class Qtue : MonoBehaviour {
     private float scaleNumber = 1.0f;
     private RectTransform rectTransform;
     private float startTime;
-    public float speed = 5.0f;
+    public float speed = 3.0f;
     public bool isMoving = false;
     // Use this for initialization
     void Start () {
@@ -45,7 +45,7 @@ public class Qtue : MonoBehaviour {
             && Input.GetButtonDown(currentPlayer + gameObject.tag))    
         {
             Destroy(gameObject);
-            scaleNumber = 2.0f;
+            scaleNumber = 1.0f;
             QTUEManager.instance.InvokeScale(scaleNumber, gameObject.transform.parent.gameObject);
         }
         else if (rectTransform.transform.localPosition.y >= perfect.GetComponent<RectTransform>().transform.localPosition.y - normalWidth
@@ -54,14 +54,14 @@ public class Qtue : MonoBehaviour {
         {
 
             Destroy(gameObject);
-            scaleNumber = 1.0f;
+            scaleNumber = .5f;
             QTUEManager.instance.InvokeScale(scaleNumber, gameObject.transform.parent.gameObject);
 
         }
         else if (rectTransform.transform.localPosition.y > perfect.GetComponent<RectTransform>().transform.localPosition.y + 150)
         {
             Destroy(gameObject, .1f);
-            scaleNumber = -0.5f;
+            scaleNumber = 0f;
             QTUEManager.instance.InvokeScale(scaleNumber, gameObject.transform.parent.gameObject);
         }
     }
