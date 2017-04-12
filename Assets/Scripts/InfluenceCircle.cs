@@ -12,7 +12,7 @@ public class InfluenceCircle : MonoBehaviour {
     public float startCircleScale;
     public float maxCircleScale;
     public float circleGrowSpeed = .25f;
-    public float circleReduceSpeed = .1f;
+    public float circleReduceSpeed = 1f;
 
     [SerializeField]
     public GameObject spotlight;

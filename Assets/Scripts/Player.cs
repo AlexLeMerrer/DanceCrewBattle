@@ -26,6 +26,11 @@ public class Player : MonoBehaviour {
 
     private float toleranceMove = .1f;
 
+    void Awake()
+    {
+        QTUEManager.instance.scalefactorP1.AddListener(scaleCircle);
+    }
+
     void Start () {
 
         if (Player1 != null)    Player2 = this;
@@ -35,7 +40,7 @@ public class Player : MonoBehaviour {
         bottomLimit =   -Camera.main.orthographicSize                       + GetComponent<Renderer>().bounds.size.y;
         rightLimit =    Camera.main.orthographicSize * Camera.main.aspect   - GetComponent<Renderer>().bounds.size.x;
         leftLimit =     -Camera.main.orthographicSize * Camera.main.aspect  + GetComponent<Renderer>().bounds.size.x;
-
+        
         setModeIdle();
 
         if (ControllerManager.instance != null && Player1 == this)
@@ -55,7 +60,7 @@ public class Player : MonoBehaviour {
         private void setModeIdle()
         {
             behaviour = Idle;
-            animationAsset.GetComponent<GAFMovieClip>().setSequence("idle", true);
+            //animationAsset.GetComponent<GAFMovieClip>().setSequence("idle", true);
         }
         private void Idle()
         {
@@ -93,6 +98,11 @@ public class Player : MonoBehaviour {
     {
         if(Input.GetButtonDown("Fire1"))
             influenceAsset.SetModeGrow(gainInfluence);
+    }
+
+    private void scaleCircle(float scaleFactor)
+    {
+        influenceAsset.SetModeGrow(scaleFactor);
     }
     
     #endregion

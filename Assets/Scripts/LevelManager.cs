@@ -9,21 +9,22 @@ public class LevelManager : MonoBehaviour {
 
     public GameObject prefab;
     public GameObject playerPrefab;
+
     private List<GameObject> neutralPerson = new List<GameObject>();
     private List<GameObject> dancingPerson = new List<GameObject>();
 
     private bool isContaminated = false;
-
+    
     public GameObject spawnP1;
     public GameObject spawnP2;
-
+    
     void Awake()
     {
         m_Manager = this;
     }
 	// Use this for initialization
 	void Start () {
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 20; i++)
         {
             Vector3 stageDimensions = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 0));
             float randomX = Random.Range(-stageDimensions.x, stageDimensions.x);
