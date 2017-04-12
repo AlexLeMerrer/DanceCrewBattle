@@ -61,7 +61,7 @@ public class Qtue : MonoBehaviour {
         else if (rectTransform.transform.localPosition.y > perfect.GetComponent<RectTransform>().transform.localPosition.y + 150)
         {
             Destroy(gameObject, .1f);
-            scaleNumber = 0.5f;
+            scaleNumber = -0.5f;
             QTUEManager.instance.InvokeScale(scaleNumber, gameObject.transform.parent.gameObject);
         }
     }
