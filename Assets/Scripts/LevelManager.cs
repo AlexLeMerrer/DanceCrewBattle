@@ -62,7 +62,7 @@ public class LevelManager : MonoBehaviour {
         return nearestChar;
     }
 
-    public bool SomeoneTargetable()
+    public bool SomeoneTargetable(GameObject neutralChar)
     {
         foreach (var lChar in neutralPerson)
         {
@@ -71,9 +71,10 @@ public class LevelManager : MonoBehaviour {
         return false;
     }
 
-    public void RemoveFromTab(GameObject neutralChar)
+    public void NeutralToDancing(GameObject neutralChar)
     {
         neutralPerson.Remove(neutralChar);
+        dancingPerson.Add(neutralChar);
     }
 
     public int getNeutralLength()

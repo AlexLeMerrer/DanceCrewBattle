@@ -107,9 +107,6 @@ public class InfluenceCircle : MonoBehaviour {
 
     void OnTriggerEnter2D(Collider2D coll)
     {
-        if(coll.gameObject.tag == "Character")
-        {
-            coll.GetComponent<Renderer>().material.color = Color.red;
-        }
+
     }
 }
