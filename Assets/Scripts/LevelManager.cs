@@ -8,10 +8,14 @@ public class LevelManager : MonoBehaviour {
     public static LevelManager manager { get { return m_Manager; } }
 
     public GameObject prefab;
+    public GameObject playerPrefab;
     private List<GameObject> neutralPerson = new List<GameObject>();
     private List<GameObject> dancingPerson = new List<GameObject>();
 
     private bool isContaminated = false;
+
+    public GameObject spawnP1;
+    public GameObject spawnP2;
 
     void Awake()
     {
@@ -31,7 +35,10 @@ public class LevelManager : MonoBehaviour {
             neutralPerson.Add(go);
             
         }
-	}
+
+        spawnPlayer();
+
+    }
 
     public GameObject SearchForSomeoneNear(GameObject neutralChar)
     {
@@ -80,4 +87,10 @@ public class LevelManager : MonoBehaviour {
         }
     }
 
+
+    private void spawnPlayer()
+    {
+        GameObject Player1 = Instantiate(playerPrefab, spawnP1.transform.position, Quaternion.identity);
+        GameObject Player2 = Instantiate(playerPrefab, spawnP2.transform.position, Quaternion.identity);
+    }
 }

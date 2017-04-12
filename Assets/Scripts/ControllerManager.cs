@@ -4,22 +4,20 @@ using System.Collections.Generic;
 using System;
 using UnityEngine.Events;
 
-public class JoystickEvent : UnityEvent<float> { }
+public class JoystickEvent : UnityEvent<float, float> { }
 public class ControllerManager : MonoBehaviour {
 
     public UnityEvent onAj1;
     public UnityEvent onBj1;
     public UnityEvent onCj1;
     public UnityEvent onDj1;
-    public JoystickEvent onAxisHorizontal1;
-    public JoystickEvent onAxisVerticall1;
+    public JoystickEvent onAxis1;
 
     public UnityEvent onAj2;
     public UnityEvent onBj2;
     public UnityEvent onCj2;
     public UnityEvent onDj2;
-    public JoystickEvent onAxisHorizontal2;
-    public JoystickEvent onAxisVerticall2;
+    public JoystickEvent onAxis2;
     
     #region Lifecycle
     private static ControllerManager _instance;
@@ -45,15 +43,13 @@ public class ControllerManager : MonoBehaviour {
         onBj1 = new UnityEvent();
         onCj1 = new UnityEvent();
         onDj1 = new UnityEvent(); 
-        onAxisHorizontal1 = new JoystickEvent();
-        onAxisVerticall1 = new JoystickEvent();
+        onAxis1 = new JoystickEvent();
 
         onAj2 = new UnityEvent();
         onBj2 = new UnityEvent();
         onCj2 = new UnityEvent();
-        onDj2 = new UnityEvent(); 
-        onAxisHorizontal2 = new JoystickEvent();
-        onAxisVerticall2 = new JoystickEvent();
+        onDj2 = new UnityEvent();
+        onAxis2 = new JoystickEvent();
     }
 
     public void Dispose()
@@ -85,10 +81,9 @@ public class ControllerManager : MonoBehaviour {
         if (Input.GetButtonDown("P2_X")) onCj2.Invoke();
         if (Input.GetButtonDown("P1_Y")) onDj1.Invoke();
         if (Input.GetButtonDown("P2_Y")) onDj2.Invoke();
-        if (Input.GetAxis("P1_Horizontal") != 0) onAxisHorizontal1.Invoke(Input.GetAxis("P1_Horizontal"));
-        if (Input.GetAxis("P2_Horizontal") != 0) onAxisHorizontal2.Invoke(Input.GetAxis("P2_Horizontal"));
-        if (Input.GetAxis("P1_Vertical") != 0) onAxisVerticall1.Invoke(Input.GetAxis("P1_Vertical"));
-        if (Input.GetAxis("P2_Vertical") != 0) onAxisVerticall2.Invoke(Input.GetAxis("P2_Vertical"));
+        if (Input.GetAxis("P1_Horizontal") != 0 || Input.GetAxis("P1_Vertical") != 0) onAxis1.Invoke(Input.GetAxis("P1_Horizontal"), Input.GetAxis("P1_Vertical"));
+        if (Input.GetAxis("P2_Horizontal") != 0 || Input.GetAxis("P2_Vertical") != 0) onAxis2.Invoke(Input.GetAxis("P2_Horizontal"), Input.GetAxis("P2_Vertical"));
+
     }
     private void testDebugController()
     {
