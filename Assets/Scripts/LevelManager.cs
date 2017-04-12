@@ -26,7 +26,8 @@ public class LevelManager : MonoBehaviour {
 	void Start () {
         for (int i = 0; i < 30; i++)
         {
-            Vector3 stageDimensions = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 0));
+            //Vector3 stageDimensions = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 0));
+            Vector3 stageDimensions = new Vector3( LevelManager.manager.GetComponent<RectTransform>().rect.width/2, LevelManager.manager.GetComponent<RectTransform>().rect.height/2, 0);
             float randomX = Random.Range(-stageDimensions.x, stageDimensions.x);
             float randomY = Random.Range(-stageDimensions.y, stageDimensions.y);
 
