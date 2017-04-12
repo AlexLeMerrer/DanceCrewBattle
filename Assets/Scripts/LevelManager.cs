@@ -38,6 +38,7 @@ public class LevelManager : MonoBehaviour {
         }
 
         spawnPlayer();
+        MusicLoopsManager.manager.PlayMusic(MusicType.menuMusic);
 
     }
 
