@@ -33,14 +33,19 @@ public class Player : MonoBehaviour {
 
     void Start () {
 
-        if (Player1 != null)    Player2 = this;
-        else                    Player1 = this;
+        if (Player2 != null)    Player1 = this;
+        else                    Player2 = this;
 
-        topLimit =      Camera.main.orthographicSize                        - GetComponent<Renderer>().bounds.size.y;
-        bottomLimit =   -Camera.main.orthographicSize                       + GetComponent<Renderer>().bounds.size.y;
-        rightLimit =    Camera.main.orthographicSize * Camera.main.aspect   - GetComponent<Renderer>().bounds.size.x;
-        leftLimit =     -Camera.main.orthographicSize * Camera.main.aspect  + GetComponent<Renderer>().bounds.size.x;
-        
+
+        //topLimit =      Camera.main.orthographicSize                        - GetComponent<Renderer>().bounds.size.y;
+        //bottomLimit =   -Camera.main.orthographicSize                       + GetComponent<Renderer>().bounds.size.y;
+        //rightLimit =    Camera.main.orthographicSize * Camera.main.aspect   - GetComponent<Renderer>().bounds.size.x;
+        //leftLimit =     -Camera.main.orthographicSize * Camera.main.aspect  + GetComponent<Renderer>().bounds.size.x;
+        topLimit =      LevelManager.manager.GetComponent<RectTransform>().rect.height/2 - GetComponent<Renderer>().bounds.size.y;
+        bottomLimit =   -LevelManager.manager.GetComponent<RectTransform>().rect.height / 2 + GetComponent<Renderer>().bounds.size.y;
+        rightLimit =    LevelManager.manager.GetComponent<RectTransform>().rect.width / 2 - GetComponent<Renderer>().bounds.size.x;
+        leftLimit =     -LevelManager.manager.GetComponent<RectTransform>().rect.width/2 + GetComponent<Renderer>().bounds.size.x;
+
         setModeIdle();
 
         if (ControllerManager.instance != null && Player1 == this)
