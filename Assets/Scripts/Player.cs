@@ -9,7 +9,8 @@ public class Player : MonoBehaviour {
     public State behaviour;
 
     //Liste des joueurs
-    public static List<Player> list = new List<Player>();
+    //public static List<Player> list = new List<Player>();
+    public bool isPlayerOne = true;
     public float velocity = 3;
     public float gainInfluence = 1f;
     public InfluenceCircle influenceAsset;
@@ -24,7 +25,7 @@ public class Player : MonoBehaviour {
     private float toleranceMove = .1f;
 
     void Start () {
-        list.Add(this);
+        //list.Add(this);
 
         topLimit =      Camera.main.orthographicSize                        - GetComponent<Renderer>().bounds.size.y;
         bottomLimit =   -Camera.main.orthographicSize                       + GetComponent<Renderer>().bounds.size.y;
@@ -34,7 +35,6 @@ public class Player : MonoBehaviour {
         setModeIdle();
     }
 	
-
 	void Update ()
     {
         ControlMove();
@@ -48,7 +48,6 @@ public class Player : MonoBehaviour {
         {
             behaviour = Idle;
             animationAsset.GetComponent<GAFMovieClip>().setSequence("idle", true);
-
         }
         private void Idle()
         {
@@ -66,7 +65,7 @@ public class Player : MonoBehaviour {
         private void Move()
         {   
             //if (Input.GetAxis("Vertical") == 0 || Input.GetAxis("Horizontal") == 0)
-            //    setModeIdle();
+            //  setModeIdle();
         }
         #endregion
     #endregion
