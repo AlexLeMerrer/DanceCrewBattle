@@ -8,9 +8,11 @@ public class Player : MonoBehaviour {
     public delegate void State();
     public State behaviour;
 
+    private static Player Player1;
+    private static Player Player2;
+
     //Liste des joueurs
     //public static List<Player> list = new List<Player>();
-    public bool isPlayerOne = true;
     public float velocity = 3;
     public float gainInfluence = 1f;
     public InfluenceCircle influenceAsset;
@@ -30,20 +32,25 @@ public class Player : MonoBehaviour {
     }
 
     void Start () {
-        //list.Add(this);
+
+        if (Player1 != null)    Player2 = this;
+        else                    Player1 = this;
 
         topLimit =      Camera.main.orthographicSize                        - GetComponent<Renderer>().bounds.size.y;
         bottomLimit =   -Camera.main.orthographicSize                       + GetComponent<Renderer>().bounds.size.y;
         rightLimit =    Camera.main.orthographicSize * Camera.main.aspect   - GetComponent<Renderer>().bounds.size.x;
         leftLimit =     -Camera.main.orthographicSize * Camera.main.aspect  + GetComponent<Renderer>().bounds.size.x;
-
         
-       setModeIdle();
+        setModeIdle();
+
+        if (ControllerManager.instance != null && Player1 == this)
+            ControllerManager.instance.onAxis1.AddListener(ControlMove);
+        else if(ControllerManager.instance != null)
+            ControllerManager.instance.onAxis2.AddListener(ControlMove);
     }
 	
 	void Update ()
     {
-        ControlMove();
         CheckInfluence();
         behaviour();
     }
@@ -77,14 +84,16 @@ public class Player : MonoBehaviour {
     #endregion
 
     #region Methods
-    private void ControlMove()
+    private void ControlMove(float pHorizontal, float pVertical)
     {
-        Vector3 newPos = transform.position + Time.fixedDeltaTime * velocity * new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0);
+        Vector3 newPos = transform.position + Time.fixedDeltaTime * velocity * new Vector3(pHorizontal, pVertical, 0);
         transform.position = new Vector3(Mathf.Clamp(newPos.x, leftLimit, rightLimit),
                                          Mathf.Clamp(newPos.y, bottomLimit, topLimit),
                                          newPos.z);
     }
 
+
+    // PROVISOIRE
     private void CheckInfluence()
     {
         if(Input.GetButtonDown("Fire1"))

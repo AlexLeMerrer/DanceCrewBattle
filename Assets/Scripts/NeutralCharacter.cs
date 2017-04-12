@@ -10,7 +10,11 @@ public class NeutralCharacter : MonoBehaviour {
     public GameObject m_target;
     public Vector3 targetPos;
     public bool isTargeted = false;
-    private float m_speed = 2.0f;
+    private float m_speed = 1.0f;
+    public string team;
+    public bool isContamined = false;
+    public string state = "neutral";
+    private int contamineCounter = 2;
 
     void Awake()
     {
@@ -34,25 +38,41 @@ public class NeutralCharacter : MonoBehaviour {
 
     public void SetModeSearchForSomeone()
     {
+        isContamined = true;
+        state = "contamined";
         LevelManager.manager.RemoveFromTab(gameObject);
-        m_target = LevelManager.manager.SearchForSomeoneNear(gameObject);
-        m_target.GetComponent<NeutralCharacter>().isTargeted = true;
-        targetPos = new Vector3(m_target.transform.position.x - 1.0f, m_target.transform.position.y - 1.0f, m_target.transform.position.z);
-        DoAction = DoActionSearch;
-
+        if (LevelManager.manager.getNeutralLength() == 0) SetModeVoid();
+        else
+        {
+            if (!LevelManager.manager.SomeoneTargetable()) SetModeDance();
+            else
+            {
+                m_target = LevelManager.manager.SearchForSomeoneNear(gameObject);
+                m_target.GetComponent<NeutralCharacter>().isTargeted = true;
+                targetPos = new Vector3(m_target.transform.position.x, m_target.transform.position.y, m_target.transform.position.z);
+                DoAction = DoActionSearch;
+            }
+        }
     }
 
     private void DoActionSearch()
     {
-        
-        transform.position = Vector3.MoveTowards(transform.position, targetPos, m_speed * Time.deltaTime);
-
-        if (transform.position == targetPos)
+        if(m_target.GetComponent<NeutralCharacter>().state != "neutral")
         {
-            SetModeDance();
-            m_target.GetComponent<NeutralCharacter>().SetModeSearchForSomeone();
+            SetModeSearchForSomeone();
         }
-
+        else
+        {
+            transform.position = Vector3.MoveTowards(transform.position, targetPos, m_speed * Time.deltaTime);
+            float deltaDist = Vector3.Distance(transform.position, targetPos);
+            if (deltaDist<1.0f)
+            {
+                contamineCounter--;
+                m_target.GetComponent<NeutralCharacter>().SetModeSearchForSomeone();
+                if (contamineCounter == 0) SetModeDance();
+                else SetModeSearchForSomeone();
+            }
+        }
     }
 
     private void DoActionDance()
@@ -66,9 +86,14 @@ public class NeutralCharacter : MonoBehaviour {
 
     }
 
+    private void Comportement()
+    {
+
+    }
+
     void OnTriggerEnter2D(Collider2D coll)
     {
-        SetModeSearchForSomeone();
+        if(!isContamined) SetModeSearchForSomeone();
     }
 
 
