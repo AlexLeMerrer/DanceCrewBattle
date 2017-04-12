@@ -52,10 +52,10 @@ public class Player : MonoBehaviour {
         animationAsset.transform.SetParent(gameObject.transform);
         animation = transform.GetChild(transform.childCount - 1).GetComponent<GAFMovieClip>();
 
-        topLimit =      LevelManager.manager.GetComponent<RectTransform>().rect.height/2 - GetComponent<Renderer>().bounds.size.y;
-        bottomLimit =   -LevelManager.manager.GetComponent<RectTransform>().rect.height / 2 + GetComponent<Renderer>().bounds.size.y;
-        rightLimit =    LevelManager.manager.GetComponent<RectTransform>().rect.width / 2 - GetComponent<Renderer>().bounds.size.x;
-        leftLimit =     -LevelManager.manager.GetComponent<RectTransform>().rect.width/2 + GetComponent<Renderer>().bounds.size.x;
+        topLimit =      LevelManager.manager.GetComponent<RectTransform>().rect.height/2;
+        bottomLimit =   -LevelManager.manager.GetComponent<RectTransform>().rect.height / 2 - .3f;
+        rightLimit =    LevelManager.manager.GetComponent<RectTransform>().rect.width / 2;
+        leftLimit =     -LevelManager.manager.GetComponent<RectTransform>().rect.width/2;
 
 
         if (ControllerManager.instance != null && Player1 == this)
@@ -149,7 +149,6 @@ public class Player : MonoBehaviour {
 
     private void scaleCircle(float scaleFactor)
     {
-
         if (Player1 == this) Debug.Log("Factor P_1" + scaleFactor);
         if (Player2 == this) Debug.Log("Factor P_2" + scaleFactor);
         influenceAsset.SetModeGrow(scaleFactor);
