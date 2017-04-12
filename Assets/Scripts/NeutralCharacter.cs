@@ -18,6 +18,7 @@ public class NeutralCharacter : MonoBehaviour {
 
     void Awake()
     {
+        LevelManager.manager.onGameOver.AddListener(SetModeVoid);
         SetModeVoid();
     }
 

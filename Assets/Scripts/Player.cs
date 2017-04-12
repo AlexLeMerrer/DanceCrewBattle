@@ -29,6 +29,8 @@ public class Player : MonoBehaviour {
     void Awake()
     {
         QTUEManager.instance.scalefactorP1.AddListener(scaleCircle);
+        LevelManager.manager.onGameOver.AddListener(SetModeVoid);
+        UIManager.manager.onGameOver.AddListener(DestroyThisPlayerShit);
     }
 
     void Start () {
@@ -62,7 +64,6 @@ public class Player : MonoBehaviour {
 	
 	void Update ()
     {
-        CheckInfluence();
         behaviour();
     }
 
@@ -91,6 +92,15 @@ public class Player : MonoBehaviour {
             //if (Input.GetAxis("Vertical") == 0 || Input.GetAxis("Horizontal") == 0)
             //  setModeIdle();
         }
+    private void SetModeVoid()
+    {
+        behaviour = DoActionVoid;
+    }
+    private void DoActionVoid()
+    {
+        ControllerManager.instance.onAxis1.RemoveListener(ControlMove);
+        ControllerManager.instance.onAxis2.RemoveListener(ControlMove);
+    }
         #endregion
     #endregion
 
@@ -105,17 +115,19 @@ public class Player : MonoBehaviour {
 
 
     // PROVISOIRE
-    private void CheckInfluence()
-    {
-        if(Input.GetButtonDown("Fire1"))
-            influenceAsset.SetModeGrow(gainInfluence);
-    }
 
     private void scaleCircle(float scaleFactor)
     {
         influenceAsset.SetModeGrow(scaleFactor);
     }
-    
+
+    private void DestroyThisPlayerShit()
+    {
+        LevelManager.manager.onGameOver.RemoveListener(SetModeVoid);
+        UIManager.manager.onGameOver.RemoveListener(DestroyThisPlayerShit);
+        Destroy(gameObject);
+    }
+
     #endregion
 
 }
