@@ -157,7 +157,6 @@ public class Player : MonoBehaviour {
 
     private void scaleCircle(float scaleFactor)
     {
-        Debug.Log("Factor " +name +" / "+ scaleFactor);
         influenceAsset.SetModeGrow(scaleFactor);
     }
     
