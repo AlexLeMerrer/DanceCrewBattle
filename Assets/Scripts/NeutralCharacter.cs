@@ -23,7 +23,7 @@ public class NeutralCharacter : MonoBehaviour {
 
     void Awake()
     {
-        if(LevelManager.manager != null) LevelManager.manager.onGameOver.AddListener(SetModeVoid);
+        if(UIManager.manager != null) UIManager.manager.onTimerEnd.AddListener(SetModeVoid);
         
         animationAsset = Instantiate(assetList[Random.Range(0, assetList.Length)]);
         animationAsset.transform.position = transform.position;

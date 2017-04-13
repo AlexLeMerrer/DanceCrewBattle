@@ -81,6 +81,7 @@ public class Player : MonoBehaviour {
         }
 
         if (LevelManager.manager != null) LevelManager.manager.onGameOver.AddListener(DestroyThisShit);
+        if (UIManager.manager != null) UIManager.manager.onTimerEnd.AddListener(SetModeVoid);
         if (UIManager.manager != null) UIManager.manager.onCounterOver.AddListener(LetsPlay);
     }
 	
@@ -134,9 +135,19 @@ public class Player : MonoBehaviour {
         {
             
         }
-        #endregion
-        #region Dance
-        private void setModeDance()
+    #endregion
+    #region void
+    private void SetModeVoid()
+    {
+        MoveBehavior = DoActionVoid;
+    }
+    private void DoActionVoid()
+    {
+        canPlay = false;
+    }
+    #endregion
+    #region Dance
+    private void setModeDance()
         {
             DanceBehavior = IdleDance;
             animation.setSequence("dance", true);
@@ -179,7 +190,7 @@ public class Player : MonoBehaviour {
 
     private void LetsPlay()
     {
-
+        canPlay = true;
     }
     
     #endregion
