@@ -16,12 +16,14 @@ public class Qtue : MonoBehaviour {
     private float startTime;
     public float speed = 3.0f;
     public bool isMoving = false;
+
+    private bool isActive;
     // Use this for initialization
     void Start () {
         perfect = gameObject.transform.parent.FindChild("Perfect").gameObject;
         rectTransform = gameObject.GetComponent<RectTransform>();
         LevelManager.manager.onGameOver.AddListener(StopMove);
-        
+        isActive = true;
     }
 
 	
@@ -46,6 +48,12 @@ public class Qtue : MonoBehaviour {
         {
             Destroy(gameObject);
             scaleNumber = 1.0f;
+
+            if (gameObject.transform.parent.gameObject.name == "QTE 1")
+                UIManager.manager.SetQteMsg(0, true);
+            else
+                UIManager.manager.SetQteMsg(0, false);
+
             QTUEManager.instance.InvokeScale(scaleNumber, gameObject.transform.parent.gameObject);
         }
         else if (rectTransform.transform.localPosition.y >= perfect.GetComponent<RectTransform>().transform.localPosition.y - normalWidth
@@ -55,14 +63,31 @@ public class Qtue : MonoBehaviour {
 
             Destroy(gameObject);
             scaleNumber = .5f;
+            
+            Debug.Log("Good");
+
+            if (gameObject.transform.parent.gameObject.name == "QTE 1")
+                UIManager.manager.SetQteMsg(1, true);
+            else
+                UIManager.manager.SetQteMsg(1, false);
+
             QTUEManager.instance.InvokeScale(scaleNumber, gameObject.transform.parent.gameObject);
 
         }
-        else if (rectTransform.transform.localPosition.y > perfect.GetComponent<RectTransform>().transform.localPosition.y + 150)
+        else if (rectTransform.transform.localPosition.y > perfect.GetComponent<RectTransform>().transform.localPosition.y + 150 && isActive)
         {
+            isActive = false;
             Destroy(gameObject, .1f);
             scaleNumber = 0f;
+
+            if(gameObject.transform.parent.gameObject.name == "QTE 1")
+                UIManager.manager.SetQteMsg(2, true);
+            else
+                UIManager.manager.SetQteMsg(2, false);
+
             QTUEManager.instance.InvokeScale(scaleNumber, gameObject.transform.parent.gameObject);
+
+
         }
     }
 }

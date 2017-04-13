@@ -27,6 +27,13 @@ public class UIManager : MonoBehaviour
     public Button timerEndButton;
     public GameObject hud;
 
+    public GameObject msgP1;
+    public GameObject msgP2;
+
+    public GameObject qteTxtMiss;
+    public GameObject qteTxtPerfect;
+    public GameObject qteTxtGood;
+
     private bool isGameOver = false;
 
     public UnityEvent onGameOver;
@@ -128,6 +135,25 @@ public class UIManager : MonoBehaviour
         }
 
 
+    }
+
+    public void SetQteMsg(int pMsg, bool pP1)
+    {
+        GameObject msg;
+
+
+
+        if      (pMsg == 0) msg = Instantiate(qteTxtPerfect);
+        else if (pMsg == 1) msg = Instantiate(qteTxtGood);
+        else                msg = Instantiate(qteTxtMiss);
+
+        if (pP1)
+        {
+            msg.transform.position = msgP1.transform.position;
+        }
+        else msg.transform.position = msgP2.transform.position;
+
+        msg.transform.SetParent(Qtues[0].transform.parent.transform);
     }
 
 }
