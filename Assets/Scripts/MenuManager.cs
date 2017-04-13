@@ -17,6 +17,7 @@ public class MenuManager : MonoBehaviour
     public Button danceButton;
     public GameObject isartPanel;
     public GameObject titleCardPanel;
+    public GameObject creditsPanel;
     public GameObject characterPanel;
 
     public Image P1;
@@ -24,6 +25,7 @@ public class MenuManager : MonoBehaviour
 
     public Button playButton;
     public Button creditsButton;
+    public Button backButton;
     private Button currentButton;
 
     private bool isPlayer1Connected = false;
@@ -58,11 +60,12 @@ public class MenuManager : MonoBehaviour
     {
         currentButton = playButton;
         playButton.Select();
-        ControllerManager.instance.onAj1.AddListener(DoActionSelectedButton);
+        ControllerManager.instance.onAj1.AddListener(DoActionSelectedButton);  
     }
 
     protected void Update()
     {
+        if (Input.GetAxis("Horizontal") > 0 || Input.GetAxis("Vertical") > 0) ChangeSelectedButton();
         isartTimer -= Time.deltaTime;
         if(isartTimer <= 0 && !isActive)
         {
@@ -74,9 +77,34 @@ public class MenuManager : MonoBehaviour
         CheckIfPlayerConnected();
     }
 
+    private void ChangeSelectedButton()
+    {
+        Debug.Log("changeButton");
+        if(currentButton == playButton)
+        {
+            currentButton = creditsButton;
+            creditsButton.Select();
+        }
+        else
+        {
+            currentButton = playButton;
+            playButton.Select();
+        }
+    }
+
     private void DoActionSelectedButton()
     {
-        if (currentButton == playButton) onTitleCardButton();
+        ControllerManager.instance.onAj1.RemoveListener(DoActionSelectedButton);
+        if (currentButton == playButton)
+        {
+            ControllerManager.instance.onAj1.AddListener(LoadScene);
+            onTitleCardButton();
+        }
+        else if (currentButton == creditsButton)
+        {
+            titleCardPanel.gameObject.SetActive(false);
+            creditsPanel.gameObject.SetActive(true);
+        }
     }
 
     private void CheckIfPlayerConnected()
