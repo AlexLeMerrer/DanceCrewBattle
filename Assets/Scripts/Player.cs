@@ -48,20 +48,19 @@ public class Player : MonoBehaviour {
         if (name == "1")
         {
             Player1 = this;
-            animationAsset = Instantiate(assetList[1]);
+            animationAsset = Instantiate(assetList[0]);
             influenceAsset = influenceAsset1;
             influenceAsset2.gameObject.SetActive(false);
         }
         else
         {
             Player2 = this;
-            animationAsset = Instantiate(assetList[1]);
+            animationAsset = Instantiate(assetList[0]);
             influenceAsset = influenceAsset2;
             influenceAsset1.gameObject.SetActive(false);
 
         }
         
-
         animationAsset.transform.position = transform.position;
         animationAsset.transform.SetParent(gameObject.transform);
 
