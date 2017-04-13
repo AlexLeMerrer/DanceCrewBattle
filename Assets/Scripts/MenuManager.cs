@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using System;
 using System.Collections.Generic;
 
@@ -69,7 +70,7 @@ public class MenuManager : MonoBehaviour
 
     private void CheckIfPlayerConnected()
     {
-        if (isPlayer1Connected && isPlayer2Connected) danceButton.gameObject.SetActive(true);
+        danceButton.gameObject.SetActive(true);
     }
 
     public void onTitleCardButton()
@@ -97,5 +98,12 @@ public class MenuManager : MonoBehaviour
     protected void OnDestroy()
     {
         _instance = null;
+    }
+
+    public void LoadScene()
+    {
+        //string[] scenepaths = AssetBundle.LoadFromFile("Assets/Scenes").GetAllScenePaths();
+        //Debug.Log(scenepaths);
+        SceneManager.LoadScene("DanceCrewBattle", LoadSceneMode.Single);
     }
 }
