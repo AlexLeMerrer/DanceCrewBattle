@@ -52,6 +52,9 @@ public class NeutralCharacter : MonoBehaviour {
         DoAction = DoActionVoid;
         animation.setSequence("idle", true);
         animation.gotoAndPlay((uint)Random.Range(animation.currentSequence.startFrame, animation.currentSequence.endFrame));
+        team = "";
+        isConverting = false;
+        isContamined = false;
     }
 
     public void SetModeDance()
@@ -59,7 +62,7 @@ public class NeutralCharacter : MonoBehaviour {
         DoAction = DoActionDance;
         animation.setSequence("dance"+team, true);
         animation.gotoAndPlay((uint)Random.Range(animation.currentSequence.startFrame, animation.currentSequence.endFrame));
-
+        if(contamineCounter == 0) StartCoroutine("ReturnVoid");
     }
 
     public void SetModeSearchForSomeone()
@@ -185,9 +188,10 @@ public class NeutralCharacter : MonoBehaviour {
         }
     }
 
+
     private void OnTriggerEnter2D(Collider2D coll)
     {
-        if (coll.gameObject.transform.parent.name.Contains("1") || coll.gameObject.transform.parent.name.Contains("1"))
+        if (coll.gameObject.transform.parent.name.Contains("1") || coll.gameObject.transform.parent.name.Contains("2"))
         {
             isCollidePlayer = true;
             if (coll.gameObject.transform.parent.name.Contains("1")) wichPlayerCollide = "1";
@@ -197,7 +201,7 @@ public class NeutralCharacter : MonoBehaviour {
 
     private void OnTriggerExit2D(Collider2D coll)
     {
-        if (coll.gameObject.transform.parent.name.Contains("1") || coll.gameObject.transform.parent.name.Contains("1"))
+        if (coll.gameObject.transform.parent.name.Contains("1") || coll.gameObject.transform.parent.name.Contains("2"))
         {
             isCollidePlayer = false;
             wichPlayerCollide = "";
@@ -209,5 +213,11 @@ public class NeutralCharacter : MonoBehaviour {
         TeamManager.AddToTeam(pTeam, gameObject);
         team = pTeam;
         //gameObject.GetComponent<Renderer>().material.color = (pTeam =="2")?new Color(1,0.75f, 0.79f,0.5f):Color.blue;
+    }
+
+    IEnumerator ReturnVoid()
+    {
+        yield return new WaitForSeconds(10.0f);
+        SetModeVoid();
     }
 }
