@@ -23,7 +23,7 @@ public class MusicLoopsManager : MonoBehaviour {
 	public bool shouldShowGui;
 
 	private int indexFadeIn;
-	private float[] maxVolumes = new float[2] ;
+	private float[] maxVolumes = new float[10] ;
 
 
 	void Awake()
@@ -39,7 +39,7 @@ public class MusicLoopsManager : MonoBehaviour {
 		{
 			maxVolumes[i] = audioSources[i].volume;
 			audioSources[i].clip = clips[i];
-		}
+        }
 
 	}
 
@@ -47,6 +47,16 @@ public class MusicLoopsManager : MonoBehaviour {
 	{
 		indexFadeIn = 0;
 	}
+
+    public int GetMusicIndex(string pName)
+    {
+        Debug.Log(pName);
+        for (int i = 0; i < audioSources.Length; i++)
+        {
+            if (audioSources[i].clip.name == pName) return i;
+        }
+        return 0;
+    }
 
 	IEnumerator FadeOutAndStopAll(float delay)
 	{
@@ -84,7 +94,7 @@ public class MusicLoopsManager : MonoBehaviour {
 		audioSources[1-indexFadeIn].Stop();
 	}
 	
-	void PlayMusic(int index)
+	public void PlayMusic(int index)
 	{
 		currClipIndex = index%clips.Count;
 		audioSources[1-indexFadeIn].clip = clips[currClipIndex];
@@ -99,11 +109,16 @@ public class MusicLoopsManager : MonoBehaviour {
 			PlayMusic(currClipIndex);
 	}
 
+    public bool IsPlaying()
+    {
+        return audioSources[currClipIndex].isPlaying;
+    }
+    /*
 	public void PlayMusic(MusicType musicType)
 	{
 		PlayMusic((int)musicType);
 	}
-
+    */
 	public void PlayNextMusic()
 	{
 		if(!FlagsManager.manager || FlagsManager.manager.GetFlag("SETTINGS_MUSIC",true))
