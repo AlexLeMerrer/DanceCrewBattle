@@ -29,6 +29,7 @@ public class LevelManager : MonoBehaviour {
         m_Manager = this;
         onGameOver = new UnityEvent();
         UIManager.manager.onGameOver.AddListener(DestroyAllThisShit);
+        UIManager.manager.onTimerEnd.AddListener(ShowWinner);
     }
 	// Use this for initialization
 	void Start () {
@@ -151,5 +152,21 @@ public class LevelManager : MonoBehaviour {
         {
             Destroy(dancingPerson[i]);
         }
+    }
+
+    private void ShowWinner()
+    {
+        int count1 = 0;
+        int count2 = 0;
+        string winner = "";
+        foreach (var dancing in dancingPerson)
+        {
+            if (dancing.GetComponent<NeutralCharacter>().team == "1") count1++;
+            else count2++;
+        }
+        if (count1 > count2) winner = "1";
+        else if (count2 > count1) winner = "2";
+        else winner = "none";
+
     }
 }
