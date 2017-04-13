@@ -209,6 +209,7 @@ public class NeutralCharacter : MonoBehaviour {
 
     private void OnTriggerExit2D(Collider2D coll)
     {
+        Debug.Log(coll);
         if (coll.gameObject.transform.parent.name.Contains("1") || coll.gameObject.transform.parent.name.Contains("2"))
         {
             isCollidePlayer = false;
@@ -231,7 +232,7 @@ public class NeutralCharacter : MonoBehaviour {
 
     private void DoActionEnter()
     {
-        transform.position = Vector3.MoveTowards(transform.position, initPos, Time.deltaTime*m_speed*15);
+        transform.position = Vector3.MoveTowards(transform.position, initPos, Time.deltaTime*m_speed*20);
         transform.position = new Vector3(transform.position.x, transform.position.y, LevelManager.manager.getZSort(transform.position));
         Vector2 pos = new Vector2(transform.position.x, transform.position.y);
         if (Vector2.Distance(pos,initPos)<0.1)
