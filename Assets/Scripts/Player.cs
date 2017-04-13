@@ -18,6 +18,7 @@ public class Player : MonoBehaviour {
     private GameObject animationAsset;
     private GAFMovieClip animation;
     private bool isDancing;
+    private bool canPlay = false;
 
     public GameObject[] assetList;
 
@@ -31,6 +32,7 @@ public class Player : MonoBehaviour {
 
     void Awake()
     {
+
     }
 
     void Start () {
@@ -77,12 +79,19 @@ public class Player : MonoBehaviour {
             setModeDance();
             QTUEManager.instance.scalefactorP2.AddListener(scaleCircle);
         }
+
+        if (LevelManager.manager != null) LevelManager.manager.onGameOver.AddListener(DestroyThisShit);
+        if (UIManager.manager != null) UIManager.manager.onTimerEnd.AddListener(SetModeVoid);
+        if (UIManager.manager != null) UIManager.manager.onCounterOver.AddListener(LetsPlay);
     }
 	
 	void Update ()
     {
-        MoveBehavior();
-        DanceBehavior();
+        if(canPlay)
+        {
+            MoveBehavior();
+            DanceBehavior();
+        }
     }
 
     #region State Machine
@@ -126,9 +135,19 @@ public class Player : MonoBehaviour {
         {
             
         }
-        #endregion
-        #region Dance
-        private void setModeDance()
+    #endregion
+    #region void
+    private void SetModeVoid()
+    {
+        MoveBehavior = DoActionVoid;
+    }
+    private void DoActionVoid()
+    {
+        canPlay = false;
+    }
+    #endregion
+    #region Dance
+    private void setModeDance()
         {
             DanceBehavior = IdleDance;
             animation.setSequence("dance", true);
@@ -144,10 +163,14 @@ public class Player : MonoBehaviour {
     #region Methods
     private void ControlMove(float pHorizontal, float pVertical)
     {
-        Vector3 newPos = transform.position + Time.fixedDeltaTime * velocity * new Vector3(pHorizontal, pVertical, 0);
-        transform.position = new Vector3(Mathf.Clamp(newPos.x, leftLimit, rightLimit),
-                                         Mathf.Clamp(newPos.y, bottomLimit, topLimit),
-                                         newPos.z);
+        if(canPlay)
+        {
+            Vector3 newPos = transform.position + Time.fixedDeltaTime * velocity * new Vector3(pHorizontal, pVertical, 0);
+            transform.position = new Vector3(Mathf.Clamp(newPos.x, leftLimit, rightLimit),
+                                             Mathf.Clamp(newPos.y, bottomLimit, topLimit),
+                                             newPos.z);
+        }
+        
     }
 
     private bool IsAnimationEnd()
@@ -157,7 +180,17 @@ public class Player : MonoBehaviour {
 
     private void scaleCircle(float scaleFactor)
     {
-        influenceAsset.SetModeGrow(scaleFactor);
+        if(canPlay) influenceAsset.SetModeGrow(scaleFactor);
+    }
+
+    private void DestroyThisShit()
+    {
+        Destroy(gameObject);
+    }
+
+    private void LetsPlay()
+    {
+        canPlay = true;
     }
     
     #endregion
