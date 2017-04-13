@@ -11,6 +11,7 @@ public class NeutralCharacter : MonoBehaviour {
     public GameObject m_target;
     public Vector3 targetPos;
     public bool isTargeted = false;
+    public string targetedBy = "";
     private float m_speed = 1.0f;
     public string team = "";
     public bool isContamined = false;
@@ -20,6 +21,13 @@ public class NeutralCharacter : MonoBehaviour {
     public GameObject[] assetList;
     private GameObject animationAsset;
     private GAFMovieClip animation;
+    public bool isConverting = false;
+    private const int MAX_CONVERT = 200;
+    private float counterConvert1 = 0;
+    private float counterConvert2 = 0;
+    private float chanceConvert = 0.8f;
+    private bool isCollidePlayer = false;
+    private string wichPlayerCollide = "";
 
     void Awake()
     {
@@ -36,6 +44,7 @@ public class NeutralCharacter : MonoBehaviour {
     void Update()
     {
         DoAction();
+        if (isCollidePlayer) ConvertFromPlayer();
     }
 
     public void SetModeVoid()
@@ -55,19 +64,24 @@ public class NeutralCharacter : MonoBehaviour {
 
     public void SetModeSearchForSomeone()
     {
-        isContamined = true;
-        state = "contamined";
-        LevelManager.manager.NeutralToDancing(gameObject);
-        if (LevelManager.manager.getNeutralLength() == 0) SetModeVoid();
+        if (contamineCounter == 0) SetModeDance();
         else
         {
-            if (!LevelManager.manager.SomeoneTargetable(gameObject)) SetModeDance();
+            isContamined = true;
+            state = "contamined";
+            LevelManager.manager.NeutralToDancing(gameObject);
+            if (LevelManager.manager.getNeutralLength() == 0) SetModeDance();
             else
             {
-                m_target = LevelManager.manager.SearchForSomeoneNear(gameObject);
-                m_target.GetComponent<NeutralCharacter>().isTargeted = true;
-                targetPos = new Vector3(m_target.transform.position.x, m_target.transform.position.y, m_target.transform.position.z);
-                DoAction = DoActionSearch;
+                if (!LevelManager.manager.SomeoneTargetable(gameObject)) SetModeDance();
+                else
+                {
+                    m_target = LevelManager.manager.SearchForSomeoneNear(gameObject);
+                    m_target.GetComponent<NeutralCharacter>().isTargeted = true;
+                    m_target.GetComponent<NeutralCharacter>().targetedBy = team;
+                    targetPos = new Vector3(m_target.transform.position.x, m_target.transform.position.y, m_target.transform.position.z);
+                    DoAction = DoActionSearch;
+                }
             }
         }
     }
@@ -75,24 +89,22 @@ public class NeutralCharacter : MonoBehaviour {
     private void DoActionSearch()
     {
         animation.setSequence("move" + team, true);
+        if (m_target.GetComponent<NeutralCharacter>().isContamined) SetModeSearchForSomeone();
+        transform.position = Vector3.MoveTowards(transform.position, targetPos, m_speed * Time.deltaTime);
+        transform.position = new Vector3(transform.position.x, transform.position.y, LevelManager.manager.getZSort(transform.position));
+        float deltaDist = Vector3.Distance(transform.position, targetPos);
+        if (deltaDist<1.0f)
+        {
+            contamineCounter--;
+            StartConversion();
+        }
+    }
 
-        if (m_target.GetComponent<NeutralCharacter>().state != "neutral")
-        {
-            SetModeSearchForSomeone();
-        }
-        else
-        {
-            transform.position = Vector3.MoveTowards(transform.position, targetPos, m_speed * Time.deltaTime);
-            transform.position = new Vector3(transform.position.x, transform.position.y, LevelManager.manager.getZSort(transform.position));
-            float deltaDist = Vector3.Distance(transform.position, targetPos);
-            if (deltaDist<1.0f)
-            {
-                contamineCounter--;
-                RecruitNeutral();
-                if (contamineCounter == 0) SetModeDance();
-                else SetModeSearchForSomeone();
-            }
-        }
+    private void StartConversion()
+    {
+        SetModeDance();
+        isConverting = true;
+        m_target.GetComponent<NeutralCharacter>().isConverting = true;
     }
 
     public void RecruitNeutral()
@@ -104,25 +116,91 @@ public class NeutralCharacter : MonoBehaviour {
     private void DoActionDance()
     {
         //LevelManager.manager.ContaminateAnotherGuy(gameObject);
+        if (isConverting)
+        {
+            if(m_target != null)
+            {
+                if (!m_target.GetComponent<NeutralCharacter>().isConverting)
+                {
+                    isConverting = false;
+                    SetModeSearchForSomeone();
+                }
+            }
+
+            if (m_target.GetComponent<NeutralCharacter>().counterConvert1 > MAX_CONVERT || m_target.GetComponent<NeutralCharacter>().counterConvert2 > MAX_CONVERT)
+            {
+                isConverting = false;
+                m_target.GetComponent<NeutralCharacter>().isConverting = false;
+                m_target.GetComponent<NeutralCharacter>().counterConvert1 = 0;
+                m_target.GetComponent<NeutralCharacter>().counterConvert2 = 0;
+                if (isContamined)
+                {
+                    if (Random.Range(0.0f, 1.0f) <= chanceConvert)
+                    {
+                        if (m_target != null) RecruitNeutral();
+                    }
+                    SetModeSearchForSomeone();
+                }
+            }
+
+            if (team == "1") m_target.GetComponent<NeutralCharacter>().counterConvert1 += 0.5f;
+            else m_target.GetComponent<NeutralCharacter>().counterConvert2 += 0.5f;
+        }
     }
+    
 
     private void DoActionVoid()
     {
 
     }
 
-    private void Comportement()
+    private void OnTriggerStay2D(Collider2D coll)
     {
-
+        
     }
 
-    void OnTriggerEnter2D(Collider2D coll)
+    private void ConvertFromPlayer()
     {
         if (!isContamined)
         {
-            if (coll.gameObject.transform.parent.name.Contains("1")) setTeam("1");
-            else setTeam("2");
-            SetModeSearchForSomeone();
+            if (wichPlayerCollide == "1")
+            {
+                Debug.Log(counterConvert1);
+                counterConvert1 += 1.0f;
+                if (counterConvert1 >= MAX_CONVERT)
+                {
+                    setTeam("1");
+                    SetModeSearchForSomeone();
+                }
+            }
+            else if (wichPlayerCollide == "2")
+            {
+                counterConvert2 += 1.0f;
+                if (counterConvert2 >= MAX_CONVERT)
+                {
+                    setTeam("2");
+                    SetModeSearchForSomeone();
+                }
+            }
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D coll)
+    {
+        if (coll.gameObject.transform.parent.name.Contains("1") || coll.gameObject.transform.parent.name.Contains("1"))
+        {
+            isCollidePlayer = true;
+            if (coll.gameObject.transform.parent.name.Contains("1")) wichPlayerCollide = "1";
+            else wichPlayerCollide = "2";
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D coll)
+    {
+        if (coll.gameObject.transform.parent.name.Contains("1") || coll.gameObject.transform.parent.name.Contains("1"))
+        {
+            isCollidePlayer = false;
+            wichPlayerCollide = "";
         }
     }
 
