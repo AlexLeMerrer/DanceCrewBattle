@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using GAF.Core;
+using UnityEngine.Events;
 
 public class NeutralCharacter : MonoBehaviour {
 
@@ -28,11 +29,12 @@ public class NeutralCharacter : MonoBehaviour {
     private float chanceConvert = 0.8f;
     private bool isCollidePlayer = false;
     private string wichPlayerCollide = "";
+    public UnityEvent onArrived;
+
+    private Vector2 initPos;
 
     void Awake()
     {
-        if(UIManager.manager != null) UIManager.manager.onTimerEnd.AddListener(SetModeVoid);
-        
         animationAsset = Instantiate(assetList[Random.Range(0, assetList.Length)]);
         animationAsset.transform.position = transform.position;
         animationAsset.transform.SetParent(gameObject.transform);
@@ -53,8 +55,14 @@ public class NeutralCharacter : MonoBehaviour {
         animation.setSequence("idle", true);
         animation.gotoAndPlay((uint)Random.Range(animation.currentSequence.startFrame, animation.currentSequence.endFrame));
         team = "";
+        counterConvert1 = 0;
+        counterConvert2 = 0;
         isConverting = false;
         isContamined = false;
+        isTargeted = false;
+        targetedBy = "";
+        state = "neutral";
+        contamineCounter = 2;
     }
 
     public void SetModeDance()
@@ -215,9 +223,36 @@ public class NeutralCharacter : MonoBehaviour {
         //gameObject.GetComponent<Renderer>().material.color = (pTeam =="2")?new Color(1,0.75f, 0.79f,0.5f):Color.blue;
     }
 
+    public void SetModeEnter()
+    {
+        animation.setSequence("move", true);
+        DoAction = DoActionEnter;
+    }
+
+    private void DoActionEnter()
+    {
+        transform.position = Vector3.MoveTowards(transform.position, initPos, Time.deltaTime*m_speed*15);
+        transform.position = new Vector3(transform.position.x, transform.position.y, LevelManager.manager.getZSort(transform.position));
+        Vector2 pos = new Vector2(transform.position.x, transform.position.y);
+        if (Vector2.Distance(pos,initPos)<0.1)
+        {
+            transform.position = new Vector3(transform.position.x, transform.position.y);
+            transform.position = new Vector3(transform.position.x, transform.position.y, LevelManager.manager.getZSort(transform.position));
+            onArrived.Invoke();
+            SetModeVoid();
+        }
+    }
+
+    public void GoTo(Vector2 pPos)
+    {
+        initPos = pPos;
+        SetModeEnter();
+    }
+
     IEnumerator ReturnVoid()
     {
         yield return new WaitForSeconds(10.0f);
+        LevelManager.manager.DancingToNeutral(gameObject);
         SetModeVoid();
     }
 }
