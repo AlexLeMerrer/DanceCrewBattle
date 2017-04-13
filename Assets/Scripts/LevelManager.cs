@@ -64,7 +64,7 @@ public class LevelManager : MonoBehaviour {
         GameObject nearestChar = neutralChar;
         foreach (var lChar in neutralPerson)
         {
-            if (lChar.GetComponent<NeutralCharacter>().isTargeted) continue;
+            if (lChar.GetComponent<NeutralCharacter>().isTargeted && neutralChar.GetComponent<NeutralCharacter>().team == lChar.GetComponent<NeutralCharacter>().targetedBy) continue;
             float newDistance = Vector3.Distance(neutralChar.transform.position, lChar.transform.position);
             if (newDistance < distance)
             {
