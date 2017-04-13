@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using System;
 using System.Collections.Generic;
 
@@ -20,6 +21,10 @@ public class MenuManager : MonoBehaviour
 
     public Image P1;
     public Image P2;
+
+    public Button playButton;
+    public Button creditsButton;
+    private Button currentButton;
 
     private bool isPlayer1Connected = false;
     private bool isPlayer2Connected = false;
@@ -45,13 +50,15 @@ public class MenuManager : MonoBehaviour
             throw new Exception("Tentative de création d'une autre instance de MenuManager alors que c'est un singleton.");
         }
         _instance = this;
-
+        
         isartPanel.gameObject.SetActive(true);
     }
 
     protected void Start()
     {
-
+        currentButton = playButton;
+        playButton.Select();
+        ControllerManager.instance.onAj1.AddListener(DoActionSelectedButton);
     }
 
     protected void Update()
@@ -67,9 +74,14 @@ public class MenuManager : MonoBehaviour
         CheckIfPlayerConnected();
     }
 
+    private void DoActionSelectedButton()
+    {
+        if (currentButton == playButton) onTitleCardButton();
+    }
+
     private void CheckIfPlayerConnected()
     {
-        if (isPlayer1Connected && isPlayer2Connected) danceButton.gameObject.SetActive(true);
+        danceButton.gameObject.SetActive(true);
     }
 
     public void onTitleCardButton()
@@ -97,5 +109,10 @@ public class MenuManager : MonoBehaviour
     protected void OnDestroy()
     {
         _instance = null;
+    }
+
+    public void LoadScene()
+    {
+        SceneManager.LoadScene("DanceCrewBattle", LoadSceneMode.Single);
     }
 }

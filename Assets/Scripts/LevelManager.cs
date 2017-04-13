@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour {
 
@@ -13,6 +14,8 @@ public class LevelManager : MonoBehaviour {
     
     private List<GameObject> neutralPerson = new List<GameObject>();
     private List<GameObject> dancingPerson = new List<GameObject>();
+
+    public Vector3 stageDimensions;
 
     private bool isContaminated = false;
     
@@ -32,22 +35,28 @@ public class LevelManager : MonoBehaviour {
         for (int i = 0; i < 30; i++)
         {
             //Vector3 stageDimensions = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 0));
-            Vector3 stageDimensions = new Vector3( LevelManager.manager.GetComponent<RectTransform>().rect.width/2, LevelManager.manager.GetComponent<RectTransform>().rect.height/2, 0);
+            stageDimensions = new Vector3( LevelManager.manager.GetComponent<RectTransform>().rect.width/2, LevelManager.manager.GetComponent<RectTransform>().rect.height/2, 0);
             float randomX = Random.Range(-stageDimensions.x, stageDimensions.x);
             float randomY = Random.Range(-stageDimensions.y, stageDimensions.y);
 
             Vector2 pos = new Vector2(randomX, randomY);
             GameObject go = Instantiate(prefab, pos, Quaternion.identity);
+            go.transform.position = new Vector3(pos.x, pos.y, getZSort(go.transform.position));
 
             neutralPerson.Add(go);
             
         }
-
-    
-
+        
         spawnPlayer();
         //MusicLoopsManager.manager.PlayMusic(MusicType.menuMusic);
 
+    }
+
+    public float getZSort(Vector3 pPos)
+    {
+        float posY = -stageDimensions.y / 2 - ((-stageDimensions.y / 2) - pPos.y);
+        float zSort = (posY / stageDimensions.y)*2;
+        return 20 + zSort;
     }
 
     public GameObject SearchForSomeoneNear(GameObject neutralChar)
@@ -56,7 +65,7 @@ public class LevelManager : MonoBehaviour {
         GameObject nearestChar = neutralChar;
         foreach (var lChar in neutralPerson)
         {
-            if (lChar.GetComponent<NeutralCharacter>().isTargeted) continue;
+            if (lChar.GetComponent<NeutralCharacter>().isTargeted && neutralChar.GetComponent<NeutralCharacter>().team == lChar.GetComponent<NeutralCharacter>().targetedBy) continue;
             float newDistance = Vector3.Distance(neutralChar.transform.position, lChar.transform.position);
             if (newDistance < distance)
             {
@@ -122,6 +131,7 @@ public class LevelManager : MonoBehaviour {
     public void EndGame()
     {
         onGameOver.Invoke();
+        SceneManager.LoadSceneAsync("TitleCard", LoadSceneMode.Additive);
     }
    
     private void DestroyAllThisShit()
