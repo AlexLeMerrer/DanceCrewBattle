@@ -26,6 +26,7 @@ public class MenuManager : MonoBehaviour
     public Button playButton;
     public Button creditsButton;
     public Button backButton;
+    public Button characterButton;
     private Button currentButton;
 
     private bool isPlayer1Connected = false;
@@ -60,12 +61,12 @@ public class MenuManager : MonoBehaviour
     {
         currentButton = playButton;
         playButton.Select();
-        ControllerManager.instance.onAj1.AddListener(DoActionSelectedButton);  
+        ControllerManager.instance.onAj1.AddListener(DoActionSelectedButton);
+        ControllerManager.instance.onAxis1.AddListener(ChangeSelectedButton);
     }
 
     protected void Update()
     {
-        if (Input.GetAxis("Horizontal") > 0 || Input.GetAxis("Vertical") > 0) ChangeSelectedButton();
         isartTimer -= Time.deltaTime;
         if(isartTimer <= 0 && !isActive)
         {
@@ -77,15 +78,15 @@ public class MenuManager : MonoBehaviour
         CheckIfPlayerConnected();
     }
 
-    private void ChangeSelectedButton()
+    private void ChangeSelectedButton(float axis1,float axis2)
     {
-        Debug.Log("changeButton");
-        if(currentButton == playButton)
+        //ControllerManager.instance.onAxis1.RemoveListener(ChangeSelectedButton);
+        if (currentButton == playButton && axis1 > 0.5)
         {
             currentButton = creditsButton;
             creditsButton.Select();
         }
-        else
+        else if (currentButton == creditsButton && axis1 < -0.5)
         {
             currentButton = playButton;
             playButton.Select();
@@ -104,7 +105,16 @@ public class MenuManager : MonoBehaviour
         {
             titleCardPanel.gameObject.SetActive(false);
             creditsPanel.gameObject.SetActive(true);
+            ControllerManager.instance.onAj1.AddListener(BackToMenu);
         }
+    }
+
+    private void BackToMenu()
+    {
+        ControllerManager.instance.onAj1.RemoveListener(BackToMenu);
+        ControllerManager.instance.onAj1.AddListener(DoActionSelectedButton);
+        creditsPanel.gameObject.SetActive(false);
+        titleCardPanel.gameObject.SetActive(true);
     }
 
     private void CheckIfPlayerConnected()
@@ -119,6 +129,7 @@ public class MenuManager : MonoBehaviour
         danceButton.gameObject.SetActive(false);
         P1.gameObject.SetActive(false);
         P2.gameObject.SetActive(false);
+        characterButton.Select();
         if (Input.GetJoystickNames().Length > 0) ActiveP1();
     }
 
