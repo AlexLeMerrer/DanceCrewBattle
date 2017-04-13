@@ -74,7 +74,7 @@ public class Player : MonoBehaviour {
             setModeDance();
             QTUEManager.instance.scalefactorP1.AddListener(scaleCircle);
         }
-        if (QTUEManager.instance != null && Player1 == this)
+        if (QTUEManager.instance != null && Player2 == this)
         {
             setModeDance();
             QTUEManager.instance.scalefactorP2.AddListener(scaleCircle);
