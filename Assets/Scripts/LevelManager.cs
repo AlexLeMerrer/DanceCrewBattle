@@ -60,7 +60,7 @@ public class LevelManager : MonoBehaviour {
         }
         StartCoroutine("NeutralCome");
         spawnPlayer();
-        //MusicLoopsManager.manager.PlayMusic(MusicType.menuMusic);
+        MusicLoopsManager.manager.PlayMusic(MusicType.menuMusic);
 
     }
 
