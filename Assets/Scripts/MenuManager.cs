@@ -46,7 +46,7 @@ public class MenuManager : MonoBehaviour
             throw new Exception("Tentative de création d'une autre instance de MenuManager alors que c'est un singleton.");
         }
         _instance = this;
-
+        
         isartPanel.gameObject.SetActive(true);
     }
 
@@ -102,8 +102,6 @@ public class MenuManager : MonoBehaviour
 
     public void LoadScene()
     {
-        //string[] scenepaths = AssetBundle.LoadFromFile("Assets/Scenes").GetAllScenePaths();
-        //Debug.Log(scenepaths);
         SceneManager.LoadScene("DanceCrewBattle", LoadSceneMode.Single);
     }
 }

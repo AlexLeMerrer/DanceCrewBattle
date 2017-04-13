@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour {
 
@@ -122,6 +123,7 @@ public class LevelManager : MonoBehaviour {
     public void EndGame()
     {
         onGameOver.Invoke();
+        SceneManager.LoadSceneAsync("TitleCard", LoadSceneMode.Additive);
     }
    
     private void DestroyAllThisShit()
