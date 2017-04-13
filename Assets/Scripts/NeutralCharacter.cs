@@ -83,6 +83,7 @@ public class NeutralCharacter : MonoBehaviour {
         else
         {
             transform.position = Vector3.MoveTowards(transform.position, targetPos, m_speed * Time.deltaTime);
+            transform.position = new Vector3(transform.position.x, transform.position.y, LevelManager.manager.getZSort(transform.position));
             float deltaDist = Vector3.Distance(transform.position, targetPos);
             if (deltaDist<1.0f)
             {
