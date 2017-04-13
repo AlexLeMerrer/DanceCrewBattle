@@ -8,6 +8,8 @@ public class Qtue : MonoBehaviour {
 
     
     private GameObject perfect;
+    public GameObject prefabRose;
+    public GameObject prefabBleu;
     public string currentPlayer;
     private float normalWidth = 50.0f;
     private float perfectWidth = 20.0f;
@@ -46,7 +48,17 @@ public class Qtue : MonoBehaviour {
             && rectTransform.transform.localPosition.y <= perfect.GetComponent<RectTransform>().transform.localPosition.y + perfectWidth
             && Input.GetButtonDown(currentPlayer + gameObject.tag))    
         {
-            Destroy(gameObject);
+            if (currentPlayer == "P1_")
+            {
+                Instantiate(prefabRose);
+                Destroy(prefabRose, 0.5f);
+            }
+            else
+            {
+                Instantiate(prefabBleu);
+                Destroy(prefabBleu, 0.5f);
+            }
+            Destroy(gameObject,0.5f);
             scaleNumber = .1f;
 
             if (gameObject.transform.parent.gameObject.name == "QTE 1")

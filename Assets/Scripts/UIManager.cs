@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
+using UITween;
 
 public class UIManager : MonoBehaviour
 {
@@ -27,6 +28,7 @@ public class UIManager : MonoBehaviour
     public Text time;
     public GameObject hud;
     public GameObject decor;
+    public GameObject continuePanel;
     public Camera mainCamera;
 
     public Image number3;
@@ -34,7 +36,8 @@ public class UIManager : MonoBehaviour
     public Image number1;
     public Image numberGO;
     private bool isCounterOver = false;
-    
+
+    public EasyTween easyTweenStart;
 
     public GameObject msgP1;
     public GameObject msgP2;
@@ -91,11 +94,12 @@ public class UIManager : MonoBehaviour
                 counter = 0;
             }
             counter++;
+            DecreaseTimer();
 
         }
 
         if(canStart)DecreaseCounterTimer();
-        if (isCounterOver) DecreaseTimer();
+        
 
     }
 
@@ -168,6 +172,7 @@ public class UIManager : MonoBehaviour
     private void ActiveGameOverText()
     {
         timerEnd.gameObject.SetActive(true);
+        continuePanel.gameObject.SetActive(true);
         ControllerManager.instance.onAj1.AddListener(DestroyAllThisUIShit);
         onTimerEnd.Invoke();
     }

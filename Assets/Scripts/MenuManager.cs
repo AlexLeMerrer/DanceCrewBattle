@@ -73,6 +73,7 @@ public class MenuManager : MonoBehaviour
             isartPanel.gameObject.SetActive(false);
             titleCardPanel.gameObject.SetActive(true);
             isActive = true;
+            if(!MusicLoopsManager.manager.IsPlaying()) MusicLoopsManager.manager.PlayMusic(MusicLoopsManager.manager.GetMusicIndex("TitleCard"));
         }
 
         CheckIfPlayerConnected();
@@ -156,6 +157,5 @@ public class MenuManager : MonoBehaviour
         GameManager.instance.player2 = 1;
         DontDestroyOnLoad(GameManager.instance);
         SceneManager.LoadScene("DanceCrewBattle", LoadSceneMode.Single);
-        
     }
 }
