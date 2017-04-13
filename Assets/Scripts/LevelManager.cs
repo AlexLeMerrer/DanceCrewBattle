@@ -91,6 +91,12 @@ public class LevelManager : MonoBehaviour {
         dancingPerson.Add(neutralChar);
     }
 
+    public void DancingToNeutral(GameObject dancingChar)
+    {
+        neutralPerson.Add(dancingChar);
+        dancingPerson.Remove(dancingChar);
+    }
+
     public int getNeutralLength()
     {
         return neutralPerson.Count;
