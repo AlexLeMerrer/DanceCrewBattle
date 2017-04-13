@@ -34,6 +34,7 @@ public class UIManager : MonoBehaviour
     public Image number1;
     public Image numberGO;
     private bool isCounterOver = false;
+    
 
     private bool isGameOver = false;
 
@@ -133,6 +134,8 @@ public class UIManager : MonoBehaviour
         }
         time.text = minutes + " : " + seconds;
     }
+
+    
 
     public static void InputReaction(GameObject pParent, string pReaction)
     {

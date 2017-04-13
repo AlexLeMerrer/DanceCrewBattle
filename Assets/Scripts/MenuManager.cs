@@ -22,6 +22,10 @@ public class MenuManager : MonoBehaviour
     public Image P1;
     public Image P2;
 
+    public Button playButton;
+    public Button creditsButton;
+    private Button currentButton;
+
     private bool isPlayer1Connected = false;
     private bool isPlayer2Connected = false;
     private bool isActive = false;
@@ -52,7 +56,9 @@ public class MenuManager : MonoBehaviour
 
     protected void Start()
     {
-
+        currentButton = playButton;
+        playButton.Select();
+        ControllerManager.instance.onAj1.AddListener(DoActionSelectedButton);
     }
 
     protected void Update()
@@ -66,6 +72,11 @@ public class MenuManager : MonoBehaviour
         }
 
         CheckIfPlayerConnected();
+    }
+
+    private void DoActionSelectedButton()
+    {
+        if (currentButton == playButton) onTitleCardButton();
     }
 
     private void CheckIfPlayerConnected()
