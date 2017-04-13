@@ -65,7 +65,6 @@ public class ControllerManager : MonoBehaviour {
     void Update () {
         //testDebugController();
         checkButton();
-        Debug.Log("Sex a pile : "+Player.Player1.getSexAppeal());
     }
     #endregion
 

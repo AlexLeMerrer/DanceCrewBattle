@@ -49,6 +49,8 @@ public class UIManager : MonoBehaviour
     public UnityEvent onTimerEnd;
     public UnityEvent onCounterOver;
 
+    public bool canStart = false;
+
     private static UIManager m_Manager;
     public static UIManager manager { get { return m_Manager; } }
 
@@ -92,7 +94,7 @@ public class UIManager : MonoBehaviour
 
         }
 
-        DecreaseCounterTimer();
+        if(canStart)DecreaseCounterTimer();
         if (isCounterOver) DecreaseTimer();
 
     }
@@ -185,6 +187,7 @@ public class UIManager : MonoBehaviour
         decor.gameObject.SetActive(false);
         LevelManager.manager.EndGame();
         mainCamera.GetComponent<AudioListener>().gameObject.SetActive(false);
+        canStart = false;
         for (int i = 0; i < waitingInput.Count; i++)
         {
             Destroy(waitingInput[i]);
