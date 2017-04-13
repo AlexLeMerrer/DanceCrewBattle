@@ -12,6 +12,8 @@ public class MusicLoopsManager : MonoBehaviour {
 
 	public static MusicLoopsManager manager;
 
+    public Camera camera;
+
 	public List<AudioClip> clips = new List<AudioClip>();
 
 	[HideInInspector]
@@ -20,7 +22,9 @@ public class MusicLoopsManager : MonoBehaviour {
 	public AudioSource[]  audioSources;
 	public float fadeDuration;
 
-	public bool shouldShowGui;
+    public AudioSource currentAudioUse;
+
+    public bool shouldShowGui;
 
 	private int indexFadeIn;
 	private float[] maxVolumes = new float[10] ;
@@ -35,7 +39,7 @@ public class MusicLoopsManager : MonoBehaviour {
 
 		audioSources = GetComponents<AudioSource>();
 
-		for (int i = 0; i < audioSources.Length; i++) 
+        for (int i = 0; i < audioSources.Length; i++) 
 		{
 			maxVolumes[i] = audioSources[i].volume;
 			audioSources[i].clip = clips[i];
@@ -101,7 +105,9 @@ public class MusicLoopsManager : MonoBehaviour {
 		indexFadeIn = 1-indexFadeIn;
 		StartCoroutine(FadeCoroutine());
 		audioSources[indexFadeIn].Play();
-	}
+        currentAudioUse = audioSources[indexFadeIn];
+        camera.GetComponent<AudioProcessor>().ActualizeAudio();
+    }
 
 	public void PlayCurrentMusic()
 	{
