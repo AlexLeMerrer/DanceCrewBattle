@@ -8,52 +8,75 @@ public class InfluenceCircle : MonoBehaviour {
     public State behaviour;
 
     private bool isActive;
-
-    public float startCircleScale;
-    public float maxCircleScale;
-    public float circleGrowSpeed;
-    public float circleReduceSpeed;
+    
+    private float circleScaleSpeed = .05f;
+    private float actualSize;
+    private int lifeCounter;
+    private int activeLifetime;
 
     [SerializeField]
-    public GameObject spotlight;
+    //public GameObject spotlight;
 
     private float circleScale;
     private float circleActualGrow;
     
     void Start () {
-        startCircleScale = circleScale;
-        setScale(startCircleScale);
+        SetModeVoid();
     }
 	
 	void Update () {
-        if (isActive) behaviour();
+        behaviour();
         lightBehavior();
     }
-
     #region State Machine
+    #region Active
+    public void SetModeActive()
+    {
+        behaviour = ActiveBehavior;
+        isActive = true;
+        actualSize = 1f;
+        setScale(actualSize);
+        lifeCounter = 0;
+        activeLifetime = UIManager.manager.QteRate;
+        gameObject.GetComponent<CircleCollider2D>().enabled = true;
+
+    }
+    private void ActiveBehavior()
+    {
+        if (lifeCounter++ > activeLifetime) SetModeReduce();
+    }
+    #endregion
+    #region Void
+    public void SetModeVoid()
+    {
+        behaviour = VoidBehavior;
+        isActive = false;
+        actualSize = 0f;
+        setScale(actualSize);
+        gameObject.GetComponent<CircleCollider2D>().enabled = false;
+    }
+    private void VoidBehavior()
+    {
+
+    }
+    #endregion
+
     #region Grow
-    public void SetModeGrow(float addScale)
+    public void SetModeGrow()
     {
         behaviour = GrowBehavior;
-        isActive = true;
-        //if (circleScale < 2 && addScale > 0) circleScale = 2;
-        //else if (circleScale + addScale > 1) circleScale += addScale;
-        if(circleScale < maxCircleScale) circleScale += addScale;
-        circleActualGrow = transform.localScale.x;
+        isActive = false;
+
     }
     private void GrowBehavior()
     {
-        if (circleActualGrow < circleScale)
+        actualSize += circleScaleSpeed;
+        if (actualSize < 1)
         {
-            circleActualGrow += circleGrowSpeed;
-            setScale(circleActualGrow);
+            setScale(actualSize);
         }
         else
-        {
-            circleActualGrow = circleScale;
-            setScale(circleActualGrow);
-            SetModeReduce();
-        }
+            SetModeActive();
     }
     #endregion
 
@@ -61,29 +84,15 @@ public class InfluenceCircle : MonoBehaviour {
     public void SetModeReduce()
     {
         behaviour = ReduceBehavior;
-        isActive = true;
+        isActive = false;
     }
     private void ReduceBehavior()
     {
-        if (circleActualGrow > startCircleScale)
-        {
-            circleScale -= circleReduceSpeed;
-            circleActualGrow -= circleReduceSpeed;
-            setScale(circleActualGrow);
-        }
+        actualSize -= circleScaleSpeed;
+        if (actualSize > 0)
+            setScale(actualSize);
         else
             SetModeVoid();
-    }
-    #endregion
-
-    #region Void
-    public void SetModeVoid()
-    {
-        behaviour = VoidBehavior;
-    }
-    private void VoidBehavior()
-    {
-
     }
     #endregion
     #endregion
@@ -95,11 +104,19 @@ public class InfluenceCircle : MonoBehaviour {
         transform.localScale = new Vector3(pScale, pScale, 0);
     }
 
+    //private void ActiveLight()
+    //{
+    //    spotlight.transform.position.Set(spotlight.transform.position.x, spotlight.transform.position.y, 89);
+    //}
+    //private void DesactiveLight()
+    //{
+    //    spotlight.transform.position.Set(spotlight.transform.position.x, spotlight.transform.position.y, 90);
+    //}
+
+
     private void lightBehavior()
     {
-        //spotlight.GetComponent<Light>().spotAngle = circleActualGrow*10f;
-        //spotlight.GetComponent<Light>().intensity = circleActualGrow/5;
-        spotlight.transform.position.Set(spotlight.transform.position.x, spotlight.transform.position.y,circleActualGrow /10);
+        //spotlight.transform.position.Set(spotlight.transform.position.x, spotlight.transform.position.y,circleActualGrow /10);
     }
     #endregion
 }

@@ -9,12 +9,14 @@ public class Player : MonoBehaviour {
     public State MoveBehavior;
     public State DanceBehavior;
 
-    private static Player Player1;
-    private static Player Player2;
+    public static Player Player1;
+    public static Player Player2;
 
     //Liste des joueurs
     public float velocity;
-    public InfluenceCircle influenceAsset;
+    public InfluenceCircle influenceAsset1;
+    public InfluenceCircle influenceAsset2;
+    private InfluenceCircle influenceAsset;
     private GameObject animationAsset;
     private GAFMovieClip animation;
     private bool isDancing;
@@ -30,6 +32,11 @@ public class Player : MonoBehaviour {
 
     private float toleranceMove = .1f;
 
+    private float maxAppeal = 1.0f;
+    private float passifLostAppeal = 0.005f;
+    private float sexAppeal;
+    public float getSexAppeal(){ return sexAppeal;}
+
     void Awake()
     {
 
@@ -42,11 +49,16 @@ public class Player : MonoBehaviour {
         {
             Player1 = this;
             animationAsset = Instantiate(assetList[0]);
+            influenceAsset = influenceAsset1;
+            influenceAsset2.gameObject.SetActive(false);
         }
         else
         {
             Player2 = this;
             animationAsset = Instantiate(assetList[1]);
+            influenceAsset = influenceAsset2;
+            influenceAsset1.gameObject.SetActive(false);
+
         }
         
 
@@ -83,6 +95,8 @@ public class Player : MonoBehaviour {
         if (LevelManager.manager != null) LevelManager.manager.onGameOver.AddListener(DestroyThisShit);
         if (UIManager.manager != null) UIManager.manager.onTimerEnd.AddListener(SetModeVoid);
         if (UIManager.manager != null) UIManager.manager.onCounterOver.AddListener(LetsPlay);
+
+        sexAppeal = 0;
     }
 	
 	void Update ()
@@ -92,6 +106,7 @@ public class Player : MonoBehaviour {
             MoveBehavior();
             DanceBehavior();
         }
+        //if(sexAppeal > 0)sexAppeal -= passifLostAppeal;
     }
 
     #region State Machine
@@ -178,9 +193,16 @@ public class Player : MonoBehaviour {
         return animation.currentFrameNumber == animation.currentSequence.endFrame;
     }
 
-    private void scaleCircle(float scaleFactor)
+    private void scaleCircle(float appealGain)
     {
-        if(canPlay) influenceAsset.SetModeGrow(scaleFactor);
+        if(appealGain > 0) influenceAsset.SetModeGrow();
+        if(sexAppeal + appealGain < maxAppeal)
+        {
+            sexAppeal += appealGain;
+        }
+        if (sexAppeal < 0) sexAppeal = 0;
+
+
     }
 
     private void DestroyThisShit()
@@ -192,7 +214,6 @@ public class Player : MonoBehaviour {
     {
         canPlay = true;
     }
-    
     #endregion
 
 }

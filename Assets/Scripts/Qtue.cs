@@ -47,7 +47,7 @@ public class Qtue : MonoBehaviour {
             && Input.GetButtonDown(currentPlayer + gameObject.tag))    
         {
             Destroy(gameObject);
-            scaleNumber = 1.0f;
+            scaleNumber = .1f;
 
             if (gameObject.transform.parent.gameObject.name == "QTE 1")
                 UIManager.manager.SetQteMsg(0, true);
@@ -62,9 +62,7 @@ public class Qtue : MonoBehaviour {
         {
 
             Destroy(gameObject);
-            scaleNumber = .5f;
-            
-            Debug.Log("Good");
+            scaleNumber = .05f;
 
             if (gameObject.transform.parent.gameObject.name == "QTE 1")
                 UIManager.manager.SetQteMsg(1, true);
@@ -78,7 +76,7 @@ public class Qtue : MonoBehaviour {
         {
             isActive = false;
             Destroy(gameObject, .1f);
-            scaleNumber = 0f;
+            scaleNumber = -0.2f;
 
             if(gameObject.transform.parent.gameObject.name == "QTE 1")
                 UIManager.manager.SetQteMsg(2, true);

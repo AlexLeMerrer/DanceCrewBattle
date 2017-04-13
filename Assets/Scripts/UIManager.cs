@@ -18,7 +18,7 @@ public class UIManager : MonoBehaviour
     private GameObject next;
     public Text timerEnd;
 
-    public float QteRate;
+    public int QteRate;
     public float timeStart;
     private float timeLeft;
 
