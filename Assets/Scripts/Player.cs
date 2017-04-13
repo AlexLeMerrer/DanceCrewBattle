@@ -48,7 +48,7 @@ public class Player : MonoBehaviour {
         if (name == "1")
         {
             Player1 = this;
-            animationAsset = Instantiate(assetList[0]);
+            animationAsset = Instantiate(assetList[1]);
             influenceAsset = influenceAsset1;
             influenceAsset2.gameObject.SetActive(false);
         }
@@ -83,12 +83,10 @@ public class Player : MonoBehaviour {
 
         if (QTUEManager.instance != null && Player1 == this)
         {
-            setModeDance();
             QTUEManager.instance.scalefactorP1.AddListener(scaleCircle);
         }
         if (QTUEManager.instance != null && Player2 == this)
         {
-            setModeDance();
             QTUEManager.instance.scalefactorP2.AddListener(scaleCircle);
         }
 
@@ -106,7 +104,8 @@ public class Player : MonoBehaviour {
             MoveBehavior();
             DanceBehavior();
         }
-        //if(sexAppeal > 0)sexAppeal -= passifLostAppeal;
+
+        if (sexAppeal > 0)sexAppeal -= passifLostAppeal;
     }
 
     #region State Machine
@@ -114,7 +113,7 @@ public class Player : MonoBehaviour {
         private void setModeIdle()
         {
             MoveBehavior = Idle;
-            animation.setSequence("idle", true);
+            animation.setSequence("idle"+name, true);
         }
         private void Idle()
         {
@@ -126,7 +125,7 @@ public class Player : MonoBehaviour {
         private void setModeMove()
         {
             MoveBehavior = Move;
-            animation.setSequence("move", true);
+            animation.setSequence("move" + name, true);
         }
         private void Move()
         {
@@ -141,31 +140,31 @@ public class Player : MonoBehaviour {
             DanceBehavior = IdleDance;
             if (Player1 == this && (Input.GetAxis("P1_Horizontal") != 0 || Input.GetAxis("P1_Vertical") != 0) ||
                 Player2 == this && (Input.GetAxis("P2_Horizontal") != 0 || Input.GetAxis("P2_Vertical") != 0))
-                animation.setSequence("move", true);
+                animation.setSequence("move" + name, true);
             else
-                animation.setSequence("idle", true);
+                animation.setSequence("idle" + name, true);
             isDancing = false;
         }
         private void IdleDance()
         {
             
         }
-    #endregion
-    #region void
-    private void SetModeVoid()
-    {
-        MoveBehavior = DoActionVoid;
-    }
-    private void DoActionVoid()
-    {
-        canPlay = false;
-    }
-    #endregion
-    #region Dance
-    private void setModeDance()
+        #endregion
+        #region void
+        private void SetModeVoid()
+        {
+            MoveBehavior = DoActionVoid;
+        }
+        private void DoActionVoid()
+        {
+            canPlay = false;
+        }
+        #endregion
+        #region Dance
+        private void setModeDance()
         {
             DanceBehavior = IdleDance;
-            animation.setSequence("dance", true);
+            animation.setSequence("dance" + name, true);
             isDancing = true;
         }
         private void Dance()
@@ -195,8 +194,15 @@ public class Player : MonoBehaviour {
 
     private void scaleCircle(float appealGain)
     {
-        if(appealGain > 0) influenceAsset.SetModeGrow();
-        if(sexAppeal + appealGain < maxAppeal)
+        if (appealGain > 0)
+        {
+            influenceAsset.SetModeGrow();
+            setModeDance();
+        }
+        else setModeIdle();
+
+
+        if (sexAppeal + appealGain < maxAppeal)
         {
             sexAppeal += appealGain;
         }
