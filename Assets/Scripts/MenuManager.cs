@@ -152,6 +152,10 @@ public class MenuManager : MonoBehaviour
 
     public void LoadScene()
     {
+        GameManager.instance.player1 = 0;
+        GameManager.instance.player2 = 1;
+        DontDestroyOnLoad(GameManager.instance);
         SceneManager.LoadScene("DanceCrewBattle", LoadSceneMode.Single);
+        
     }
 }
