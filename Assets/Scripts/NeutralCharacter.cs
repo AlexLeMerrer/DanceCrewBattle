@@ -210,6 +210,7 @@ public class NeutralCharacter : MonoBehaviour {
     private void OnTriggerExit2D(Collider2D coll)
     {
         Debug.Log(coll);
+        if (coll == null) return;
         if (coll.gameObject.transform.parent.name.Contains("1") || coll.gameObject.transform.parent.name.Contains("2"))
         {
             isCollidePlayer = false;

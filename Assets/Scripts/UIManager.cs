@@ -82,7 +82,7 @@ public class UIManager : MonoBehaviour
                 {
 
                     next = GameObject.Instantiate(controls[Random.Range(0, controls.Length)]);
-                    next.AddComponent<Qtue>();
+                    //next.AddComponent<Qtue>();
                     next.transform.SetParent(lQtue.transform);
                     next.transform.position = lQtue.transform.FindChild("Start").gameObject.transform.position;
                     if (next.gameObject.transform.parent.name == "QTE 1") next.GetComponent<Qtue>().currentPlayer = "P1_";
@@ -189,7 +189,7 @@ public class UIManager : MonoBehaviour
         Destroy(timerEnd);
         Destroy(time);
         Destroy(hud);
-        decor.gameObject.SetActive(false);
+        //decor.gameObject.SetActive(false);
         LevelManager.manager.EndGame();
         mainCamera.GetComponent<AudioListener>().gameObject.SetActive(false);
         canStart = false;
