@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using System;
+using System.Collections;
 using System.Collections.Generic;
+using System;
 
 
 
@@ -28,6 +29,16 @@ public class MenuManager : MonoBehaviour
     public Button backButton;
     public Button characterButton;
     private Button currentButton;
+
+    public Image player1;
+    public Image player2;
+    private int numberplayer = 2;
+    private int currentNumberPlayer1 = 0;
+    private int currentNumberPlayer2 = 0;
+    private bool isChanging = false;
+
+    public Sprite[] persoImage1;
+    public Sprite[] persoImage2;
 
     private bool isPlayer1Connected = false;
     private bool isPlayer2Connected = false;
@@ -128,10 +139,60 @@ public class MenuManager : MonoBehaviour
         titleCardPanel.gameObject.SetActive(false);
         characterPanel.gameObject.SetActive(true);
         danceButton.gameObject.SetActive(false);
-        P1.gameObject.SetActive(false);
-        P2.gameObject.SetActive(false);
         characterButton.Select();
+        ControllerManager.instance.onAxis1.AddListener(ChangePerso1);
+        ControllerManager.instance.onAxis2.AddListener(ChangePerso2);
         if (Input.GetJoystickNames().Length > 0) ActiveP1();
+    }
+
+    private void ChangePerso1(float ax1, float ax2)
+    {
+        if(ax1 >= 0.8f && !isChanging)
+        {
+            isChanging = true;
+            currentNumberPlayer1++;
+            if (currentNumberPlayer1 > 2) currentNumberPlayer1 = 0;
+            StartCoroutine(TimerPerso());
+        }
+        else if(ax1 <= -0.8f && !isChanging)
+        {
+            isChanging = true;
+            currentNumberPlayer1--;
+            if (currentNumberPlayer1 < 0) currentNumberPlayer1 = 2;
+            StartCoroutine(TimerPerso());
+        }
+        GameManager.instance.player1 = currentNumberPlayer1;
+        player1.GetComponent<Image>().sprite = persoImage1[currentNumberPlayer1];
+    }
+
+    IEnumerator TimerPerso()
+    {
+        yield return new WaitForSeconds(0.25f);
+        isChanging = false;
+    }
+
+    private void ChangePerso2(float ax1, float ax2)
+    {
+        if(ax1 > 0.8 && !isChanging)
+        {
+            isChanging = true;
+            currentNumberPlayer2++;
+            if (currentNumberPlayer2 > 2) currentNumberPlayer2 = 0;
+            StartCoroutine(TimerPerso());
+            GameManager.instance.player1 = currentNumberPlayer2;
+
+        }
+        else if (ax1 < -0.8 && !isChanging)
+        {
+            isChanging = true;
+            currentNumberPlayer2--;
+            if (currentNumberPlayer1 < 0) currentNumberPlayer1 = 2;
+            StartCoroutine(TimerPerso());
+            GameManager.instance.player1 = currentNumberPlayer2;
+        }
+
+        player2.GetComponent<Image>().sprite = persoImage2[currentNumberPlayer2];
+
     }
 
     private void ActiveP1()

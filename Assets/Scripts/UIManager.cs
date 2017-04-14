@@ -69,7 +69,6 @@ public class UIManager : MonoBehaviour
     {
         waitingInput = new List<GameObject>();
         timeLeft = timeStart;
-        
     }
 
     // Update is called once per frame
@@ -148,7 +147,8 @@ public class UIManager : MonoBehaviour
         time.text = minutes + " : " + seconds;
     }
 
-    
+
+
 
     public static void InputReaction(GameObject pParent, string pReaction)
     {
