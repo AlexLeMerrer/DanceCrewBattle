@@ -19,6 +19,8 @@ public class NeutralCharacter : MonoBehaviour {
     public string state = "neutral";
     private int contamineCounter = 2;
 
+    public int speedIntro = 25;
+
     public GameObject[] assetList;
     private GameObject animationAsset;
     private GAFMovieClip animation;
@@ -129,7 +131,7 @@ public class NeutralCharacter : MonoBehaviour {
         //LevelManager.manager.ContaminateAnotherGuy(gameObject);
         if (isConverting)
         {
-            if(m_target != null)
+            if (m_target != null)
             {
                 if (!m_target.GetComponent<NeutralCharacter>().isConverting)
                 {
@@ -137,6 +139,7 @@ public class NeutralCharacter : MonoBehaviour {
                     SetModeSearchForSomeone();
                 }
             }
+            else return;
 
             if (m_target.GetComponent<NeutralCharacter>().counterConvert1 > MAX_CONVERT || m_target.GetComponent<NeutralCharacter>().counterConvert2 > MAX_CONVERT)
             {
@@ -177,7 +180,7 @@ public class NeutralCharacter : MonoBehaviour {
             if (wichPlayerCollide == "1")
             {
                 Debug.Log(counterConvert1);
-                counterConvert1 += 1.0f;
+                counterConvert1 += 5.0f;
                 if (counterConvert1 >= MAX_CONVERT)
                 {
                     setTeam("1");
@@ -186,7 +189,7 @@ public class NeutralCharacter : MonoBehaviour {
             }
             else if (wichPlayerCollide == "2")
             {
-                counterConvert2 += 1.0f;
+                counterConvert2 += 5.0f;
                 if (counterConvert2 >= MAX_CONVERT)
                 {
                     setTeam("2");
@@ -233,7 +236,7 @@ public class NeutralCharacter : MonoBehaviour {
 
     private void DoActionEnter()
     {
-        transform.position = Vector3.MoveTowards(transform.position, initPos, Time.deltaTime*m_speed*20);
+        transform.position = Vector3.MoveTowards(transform.position, initPos, Time.deltaTime* speedIntro);
         transform.position = new Vector3(transform.position.x, transform.position.y, LevelManager.manager.getZSort(transform.position));
         Vector2 pos = new Vector2(transform.position.x, transform.position.y);
         if (Vector2.Distance(pos,initPos)<0.1)
@@ -253,7 +256,7 @@ public class NeutralCharacter : MonoBehaviour {
 
     IEnumerator ReturnVoid()
     {
-        yield return new WaitForSeconds(10.0f);
+        yield return new WaitForSeconds(8.0f);
         LevelManager.manager.DancingToNeutral(gameObject);
         SetModeVoid();
     }
