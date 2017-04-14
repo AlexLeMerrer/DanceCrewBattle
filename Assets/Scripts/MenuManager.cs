@@ -179,7 +179,6 @@ public class MenuManager : MonoBehaviour
             currentNumberPlayer2++;
             if (currentNumberPlayer2 > 2) currentNumberPlayer2 = 0;
             StartCoroutine(TimerPerso());
-            GameManager.instance.player1 = currentNumberPlayer2;
 
         }
         else if (ax1 < -0.8 && !isChanging)
@@ -188,9 +187,8 @@ public class MenuManager : MonoBehaviour
             currentNumberPlayer2--;
             if (currentNumberPlayer1 < 0) currentNumberPlayer1 = 2;
             StartCoroutine(TimerPerso());
-            GameManager.instance.player1 = currentNumberPlayer2;
         }
-
+        GameManager.instance.player2 = currentNumberPlayer2;
         player2.GetComponent<Image>().sprite = persoImage2[currentNumberPlayer2];
 
     }
