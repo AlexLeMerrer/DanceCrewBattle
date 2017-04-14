@@ -32,6 +32,9 @@ public class Player : MonoBehaviour {
 
     private float toleranceMove = .1f;
 
+    public GameObject p1;
+    public GameObject p2;
+
     private float maxAppeal = 1.0f;
     private float passifLostAppeal = 0.005f;
     private float sexAppeal;
@@ -51,6 +54,7 @@ public class Player : MonoBehaviour {
             animationAsset = Instantiate(assetList[GameManager.instance.player1]); //SELECTION RANDOM J1      
             influenceAsset = influenceAsset1;
             influenceAsset2.gameObject.SetActive(false);
+            p1.SetActive(true);
         }
         else
         {
@@ -58,6 +62,7 @@ public class Player : MonoBehaviour {
             animationAsset = Instantiate(assetList[GameManager.instance.player2]); //SELECTION RANDOM J2
             influenceAsset = influenceAsset2;
             influenceAsset1.gameObject.SetActive(false);
+            p2.SetActive(true);
 
         }
         
@@ -212,6 +217,8 @@ public class Player : MonoBehaviour {
 
     private void DestroyThisShit()
     {
+        p1.SetActive(false);
+        p2.SetActive(false);
         Destroy(gameObject);
     }
 
