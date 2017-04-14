@@ -137,6 +137,7 @@ public class UIManager : MonoBehaviour
     {
         timeLeft -= Time.deltaTime;
         string minutes = Mathf.Floor(timeLeft / 60).ToString("0");
+        if (minutes == "-1") minutes = "0";
         string seconds = (timeLeft % 60).ToString("00");
         if (timeLeft < 0)
         {

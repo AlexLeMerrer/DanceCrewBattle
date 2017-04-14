@@ -50,6 +50,8 @@ public class ControllerManager : MonoBehaviour {
         onCj2 = new UnityEvent();
         onDj2 = new UnityEvent();
         onAxis2 = new JoystickEvent();
+
+        
     }
 
     public void Dispose()
@@ -57,7 +59,7 @@ public class ControllerManager : MonoBehaviour {
         _instance = null;
     }
 
-    protected void OnDestroy()
+    public void OnDestroy()
     {
         _instance = null;
     }

@@ -155,7 +155,10 @@ public class LevelManager : MonoBehaviour {
 
     public void EndGame()
     {
+        GameManager.instance.OnDestroy();
+        ControllerManager.instance.OnDestroy();
         onGameOver.Invoke();
+        Destroy(gameObject);
         SceneManager.LoadSceneAsync("TitleCard", LoadSceneMode.Additive);
     }
    

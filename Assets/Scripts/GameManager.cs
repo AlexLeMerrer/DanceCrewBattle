@@ -41,7 +41,7 @@ public class GameManager : MonoBehaviour
 
     }
 
-    protected void OnDestroy()
+    public void OnDestroy()
     {
         _instance = null;
     }

@@ -147,6 +147,7 @@ public class MenuManager : MonoBehaviour
 
     private void ChangePerso1(float ax1, float ax2)
     {
+        Debug.Log(currentNumberPlayer1);
         if(ax1 >= 0.8f && !isChanging)
         {
             isChanging = true;
@@ -173,7 +174,8 @@ public class MenuManager : MonoBehaviour
 
     private void ChangePerso2(float ax1, float ax2)
     {
-        if(ax1 > 0.8 && !isChanging)
+        Debug.Log(currentNumberPlayer2);
+        if (ax1 > 0.8 && !isChanging)
         {
             isChanging = true;
             currentNumberPlayer2++;
@@ -185,7 +187,7 @@ public class MenuManager : MonoBehaviour
         {
             isChanging = true;
             currentNumberPlayer2--;
-            if (currentNumberPlayer1 < 0) currentNumberPlayer1 = 2;
+            if (currentNumberPlayer2 < 0) currentNumberPlayer2 = 2;
             StartCoroutine(TimerPerso());
         }
         GameManager.instance.player2 = currentNumberPlayer2;
@@ -212,8 +214,6 @@ public class MenuManager : MonoBehaviour
 
     public void LoadScene()
     {
-        GameManager.instance.player1 = 0;
-        GameManager.instance.player2 = 1;
         DontDestroyOnLoad(GameManager.instance);
         SceneManager.LoadScene("DanceCrewBattle", LoadSceneMode.Single);
     }
