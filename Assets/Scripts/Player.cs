@@ -48,14 +48,14 @@ public class Player : MonoBehaviour {
         if (name == "1")
         {
             Player1 = this;
-            animationAsset = Instantiate(assetList[0]);
+            animationAsset = Instantiate(assetList[Random.Range(0, 3)]); //SELECTION RANDOM J1      
             influenceAsset = influenceAsset1;
             influenceAsset2.gameObject.SetActive(false);
         }
         else
         {
             Player2 = this;
-            animationAsset = Instantiate(assetList[0]);
+            animationAsset = Instantiate(assetList[Random.Range(0, 3)]); //SELECTION RANDOM J2
             influenceAsset = influenceAsset2;
             influenceAsset1.gameObject.SetActive(false);
 
